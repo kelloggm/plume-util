@@ -16,7 +16,6 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
-import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Mathematical utilities. */
 public final class MathPlume {
@@ -566,7 +565,7 @@ public final class MathPlume {
   ///
 
   /**
-   * Returns the greatest common divisor of the two arguments.
+   * Return the greatest common divisor of the two arguments.
    *
    * @param a first operand
    * @param b second operand
@@ -591,7 +590,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns the greatest common divisor of the elements of int array a.
+   * Return the greatest common divisor of the elements of int array a.
    *
    * @param a array of operands
    * @return greatest common divisor of the elements of a
@@ -613,7 +612,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns the gcd (greatest common divisor) of the differences between the elements of int array
+   * Return the gcd (greatest common divisor) of the differences between the elements of int array
    * a.
    *
    * @param a array of operands
@@ -638,7 +637,7 @@ public final class MathPlume {
   /// gcd -- version for manipulating long (rather than int) values
 
   /**
-   * Returns the greatest common divisor of the two arguments.
+   * Return the greatest common divisor of the two arguments.
    *
    * @param a first operand
    * @param b second operand
@@ -663,7 +662,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns the greatest common divisor of the elements of long array a.
+   * Return the greatest common divisor of the elements of long array a.
    *
    * @param a array of operands
    * @return greatest common divisor of the elements of a
@@ -685,7 +684,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns the gcd (greatest common divisor) of the differences between the elements of long array
+   * Return the gcd (greatest common divisor) of the differences between the elements of long array
    * a.
    *
    * @param a array of operands
@@ -708,7 +707,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns the greatest common divisor of the two arguments.
+   * Return the greatest common divisor of the two arguments.
    *
    * @param a first operand
    * @param b second operand
@@ -742,7 +741,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns the greatest common divisor of the elements of double array a.
+   * Return the greatest common divisor of the elements of double array a.
    *
    * @param a array of operands
    * @return greatest common divisor of the elements of a
@@ -764,7 +763,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns the gcd (greatest common divisor) of the differences between the elements of double
+   * Return the gcd (greatest common divisor) of the differences between the elements of double
    * array a.
    *
    * @param a array of operands
@@ -791,7 +790,7 @@ public final class MathPlume {
   ///
 
   /**
-   * Returns z such that {@code (z == x mod y) && (0 <= z < abs(y))}. This should really be named
+   * Return z such that {@code (z == x mod y) && (0 <= z < abs(y))}. This should really be named
    * {@code modNonnegative} rather than {@code modPositive}.
    *
    * @param x value to be modded
@@ -808,16 +807,16 @@ public final class MathPlume {
   }
 
   /**
-   * Returns z such that {@code (z == x mod y) && (0 <= z < abs(y))}.
+   * Return z such that {@code (z == x mod y) && (0 <= z < abs(y))}.
    *
    * @param x value to be modded
    * @param y modulus
    * @return x % y, where the result is constrained to be non-negative
    */
   @SuppressWarnings({
-    "lessthan:return",
-    "lowerbound:return",
-    "index:return"
+    "lessthan:return.type.incompatible",
+    "lowerbound:return.type.incompatible",
+    "index:return.type.incompatible"
   }) // result is non-negative because either y is positive (-> x % y is non-negative)
   // or |y| is added to x % y, which is also non-negative
   @Pure
@@ -832,7 +831,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
+   * Return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
    * largest possible modulus is used, and the trivial constraint that all integers are equal to 0
    * mod 1 is not returned (null is returned instead). Also, return null if the array is less than 3
    * elements long.
@@ -841,8 +840,7 @@ public final class MathPlume {
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
    */
-  @SuppressWarnings("value:statically.executable.not.pure") // results are .equals() but not ==
-  @SideEffectFree
+  @Pure
   @StaticallyExecutable
   public static int @Nullable @ArrayLen(2) [] modulus(int[] nums) {
     if (nums.length < 3) {
@@ -867,7 +865,7 @@ public final class MathPlume {
    * int[] doesn't already exist, because this does not necessarily examine every value produced by
    * its iterator.
    *
-   * @param itor iterator of operands; modified by this method
+   * @param itor iterator of operands
    * @return an array of two integers (r,m) such that each number in itor is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
    * @see #modulus(int[])
@@ -903,7 +901,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
+   * Return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
    * largest possible modulus is used, and the trivial constraint that all integers are equal to 0
    * mod 1 is not returned (null is returned instead).
    *
@@ -921,8 +919,7 @@ public final class MathPlume {
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the array contains fewer than 3 elements
    */
-  @SuppressWarnings("value:statically.executable.not.pure") // results are .equals() but not ==
-  @SideEffectFree
+  @Pure
   @StaticallyExecutable
   public static int @Nullable @ArrayLen(2) [] modulusStrict(int[] nums, boolean nonstrictEnds) {
     if (nums.length < 3) {
@@ -971,7 +968,7 @@ public final class MathPlume {
    *
    * <p>For documentation, see {@link #modulusStrict(int[], boolean)}.
    *
-   * @param itor iterator of operands; modified by this method
+   * @param itor iterator of operands
    * @param nonstrictEnds whether endpoints are NOT subject to the strict density requirement
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
@@ -1030,7 +1027,7 @@ public final class MathPlume {
   /// modulus for long (as opposed to int) values
 
   /**
-   * Returns z such that {@code (z == x mod y) && (0 <= z < abs(y))}. This should really be named
+   * Return z such that {@code (z == x mod y) && (0 <= z < abs(y))}. This should really be named
    * {@code modNonnegative} rather than {@code modPositive}.
    *
    * @param x value to be modded
@@ -1047,16 +1044,16 @@ public final class MathPlume {
   }
 
   /**
-   * Returns z such that {@code (z == x mod y) && (0 <= z < abs(y))}.
+   * Return z such that {@code (z == x mod y) && (0 <= z < abs(y))}.
    *
    * @param x value to be modded
    * @param y modulus
    * @return x % y, where the result is constrained to be non-negative
    */
   @SuppressWarnings({
-    "lessthan:return",
-    "lowerbound:return",
-    "index:return"
+    "lessthan:return.type.incompatible",
+    "lowerbound:return.type.incompatible",
+    "index:return.type.incompatible"
   }) // result is non-negative because either y is positive (-> x % y is non-negative) or
   // |y| is added to x % y, which is also non-negative
   @Pure
@@ -1071,7 +1068,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
+   * Return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
    * largest possible modulus is used, and the trivial constraint that all integers are equal to 0
    * mod 1 is not returned (null is returned instead). Also, return null if the array is less than 3
    * elements long.
@@ -1080,8 +1077,7 @@ public final class MathPlume {
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
    */
-  @SuppressWarnings("value:statically.executable.not.pure") // results are .equals() but not ==
-  @SideEffectFree
+  @Pure
   @StaticallyExecutable
   public static long @Nullable @ArrayLen(2) [] modulus(long[] nums) {
     if (nums.length < 3) {
@@ -1106,7 +1102,7 @@ public final class MathPlume {
    * long[] doesn't already exist, because this does not necessarily examine every value produced by
    * its iterator.
    *
-   * @param itor iterator of operands; modified by this method
+   * @param itor iterator of operands
    * @return an array of two integers (r,m) such that each number in itor is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
    * @see #modulus(long[])
@@ -1142,7 +1138,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
+   * Return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
    * largest possible modulus is used, and the trivial constraint that all integers are equal to 0
    * mod 1 is not returned (null is returned instead).
    *
@@ -1160,8 +1156,7 @@ public final class MathPlume {
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the array contains fewer than 3 elements
    */
-  @SuppressWarnings("value:statically.executable.not.pure") // results are .equals() but not ==
-  @SideEffectFree
+  @Pure
   @StaticallyExecutable
   public static long @Nullable @ArrayLen(2) [] modulusStrict(long[] nums, boolean nonstrictEnds) {
     if (nums.length < 3) {
@@ -1210,7 +1205,7 @@ public final class MathPlume {
    *
    * <p>For documentation, see {@link #modulusStrict(long[], boolean)}.
    *
-   * @param itor iterator of operands; modified by this method
+   * @param itor iterator of operands
    * @param nonstrictEnds whether endpoints are NOT subject to the strict density requirement
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
@@ -1271,7 +1266,7 @@ public final class MathPlume {
   ///
 
   /**
-   * Returns an array containing all the numbers <b>not</b> in its argument array (which must be
+   * Return an array containing all the numbers <b>not</b> in its argument array (which must be
    * non-empty) but in the argument's range; that is, bigger than its argument's minimum value and
    * smaller than its argument's maximum value. The result contains no duplicates and is in order.
    *
@@ -1373,7 +1368,8 @@ public final class MathPlume {
         currentMissing = currentNonmissing;
       }
       this.numsItor = numsItor;
-      @SuppressWarnings("lowerbound:assignment") // unused variable, so value doesn't matter
+      @SuppressWarnings(
+          "lowerbound:assignment.type.incompatible") // unused variable, so value doesn't matter
       @IndexFor("nums") int unused = Integer.MIN_VALUE;
       currentIndex = unused;
     }
@@ -1391,9 +1387,8 @@ public final class MathPlume {
       while (currentMissing == currentNonmissing) {
         if (nums != null) {
           @SuppressWarnings(
-              "index:assignment" // This breaks the invariant, but it's checked right below and the
-          // function exits.
-          )
+              "index:assignment.type.incompatible") // This breaks the invariant, but it's
+          // checked right below and the function exits.
           @IndexFor("nums") int currentIndex_temp = currentIndex + 1;
           currentIndex = currentIndex_temp;
           if (currentIndex >= nums.length) {
@@ -1454,7 +1449,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
+   * Return a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
    * in their range are. Returns null if the input array has 0 length.
    *
    * @param nums the list of operands
@@ -1480,7 +1475,7 @@ public final class MathPlume {
   /**
    * Helper for {@link #nonmodulusStrict(int[])}.
    *
-   * @param missing the missing integers; modified by this method
+   * @param missing the missing integers
    * @return value to be returned by {@link #nonmodulusStrict(int[])}: a tuple of (r,m) where all
    *     numbers in {@code missing} are equal to r (ood m)
    */
@@ -1504,8 +1499,7 @@ public final class MathPlume {
 
   /**
    * @param rm a tuple of (r,m)
-   * @param rfali a sequence of numbers, plus a first and last element outside their range. This
-   *     iterator has already been iterated all the way to its end.
+   * @param rfali a sequence of numbers, plus a first and last element outside their range
    * @return true if the first and last elements are not equal to r (mod m)
    */
   private static boolean checkFirstAndLastNonmodulus(
@@ -1518,7 +1512,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
+   * Return a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
    * in their range are.
    *
    * @param nums the list of operands
@@ -1531,7 +1525,7 @@ public final class MathPlume {
   // Old, slightly less efficient implementation that uses the version of
   // missingNumbers that returns an array instead of an Iterator.
   // /**
-  //  * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod
+  //  * Return a tuple of (r,m) where no number in NUMS is equal to r (mod
   //  * m) but all missing numbers in their range are.
   //  */
   // public static int @Nullable @ArrayLen(2) [] nonmodulusStrict(int[] nums) {
@@ -1549,7 +1543,7 @@ public final class MathPlume {
   // }
 
   /**
-   * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod m) but for every number in
+   * Return a tuple of (r,m) where no number in NUMS is equal to r (mod m) but for every number in
    * NUMS, at least one is equal to every non-r remainder. The modulus is chosen as small as
    * possible, but no greater than half the range of the input numbers (else null is returned).
    *
@@ -1601,7 +1595,7 @@ public final class MathPlume {
   /// non-modulus for long (as opposed to int) values
 
   /**
-   * Returns an array containing all the numbers <b>not</b> in its argument array (which must be
+   * Return an array containing all the numbers <b>not</b> in its argument array (which must be
    * non-empty) but in the argument's range; that is, bigger than its argument's minimum value and
    * smaller than its argument's maximum value. The result contains no duplicates and is in order.
    *
@@ -1629,7 +1623,6 @@ public final class MathPlume {
         val++;
       }
     }
-
     long[] resultArray = new long[resultList.size()];
     for (int i = 0; i < resultArray.length; i++) {
       resultArray[i] = resultList.get(i).longValue();
@@ -1705,7 +1698,8 @@ public final class MathPlume {
         currentMissing = currentNonmissing;
       }
       this.numsItor = numsItor;
-      @SuppressWarnings("lowerbound:assignment") // unused variable, so value doesn't matter
+      @SuppressWarnings(
+          "lowerbound:assignment.type.incompatible") // unused variable, so value doesn't matter
       @IndexFor("nums") int unused = Integer.MIN_VALUE;
       currentIndex = unused;
     }
@@ -1723,9 +1717,8 @@ public final class MathPlume {
       while (currentMissing == currentNonmissing) {
         if (nums != null) {
           @SuppressWarnings(
-              "index:assignment" // This breaks the invariant, but it's checked right below and the
-          // function exits.
-          )
+              "index:assignment.type.incompatible") // This breaks the invariant, but it's
+          // checked right below and the function exits.
           @IndexFor("nums") int currentIndex_temp = currentIndex + 1;
           currentIndex = currentIndex_temp;
           if (currentIndex >= nums.length) {
@@ -1786,7 +1779,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
+   * Return a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
    * in their range are. Returns null if the input array has 0 length.
    *
    * @param nums the list of operands
@@ -1812,7 +1805,7 @@ public final class MathPlume {
   /**
    * Helper for {@link #nonmodulusStrict(long[])}.
    *
-   * @param missing the missing integers; modified by this method
+   * @param missing the missing integers
    * @return value to be returned by {@link #nonmodulusStrict(long[])}
    */
   private static long @Nullable @ArrayLen(2) [] nonmodulusStrictLongInternal(
@@ -1835,11 +1828,9 @@ public final class MathPlume {
 
   /**
    * @param rm an an array containing two elements
-   * @param rfali a sequence of numbers, plus a first and last element outside their range. This
-   *     iterator has already been iterated all the way to its end.
+   * @param rfali a sequence of numbers, plus a first and last element outside their range
    * @return true if the first and last elements are equal to r (mod m)
    */
-  @Pure
   private static boolean checkFirstAndLastNonmodulus(
       long @ArrayLen(2) [] rm, CollectionsPlume.RemoveFirstAndLastIterator<Long> rfali) {
     long r = rm[0];
@@ -1850,7 +1841,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
+   * Return a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
    * in their range are.
    *
    * @param nums the list of operands
@@ -1863,7 +1854,7 @@ public final class MathPlume {
   // Old, slightly less efficient implementation that uses the version of
   // missingNumbers that returns an array instead of an Iterator.
   // /**
-  //  * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod
+  //  * Return a tuple of (r,m) where no number in NUMS is equal to r (mod
   //  * m) but all missing numbers in their range are.
   //  */
   // public static long @Nullable @ArrayLen(2) [] nonmodulusStrict(long[] nums) {
@@ -1881,7 +1872,7 @@ public final class MathPlume {
   // }
 
   /**
-   * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod m) but for every number in
+   * Return a tuple of (r,m) where no number in NUMS is equal to r (mod m) but for every number in
    * NUMS, at least one is equal to every non-r remainder. The modulus is chosen as small as
    * possible, but no greater than half the range of the input numbers (else null is returned).
    *

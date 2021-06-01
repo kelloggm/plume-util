@@ -71,7 +71,6 @@ public final class FilesPlume {
       try {
         in = new GZIPInputStream(fis);
       } catch (IOException e) {
-        fis.close();
         throw new IOException("Problem while reading " + path, e);
       }
     } else {
@@ -352,7 +351,6 @@ public final class FilesPlume {
       try {
         in = new GZIPOutputStream(fis);
       } catch (IOException e) {
-        fis.close();
         throw new IOException("Problem while reading " + path, e);
       }
     } else {
@@ -620,7 +618,7 @@ public final class FilesPlume {
   }
 
   /**
-   * Returns true iff files have the same contents.
+   * Return true iff files have the same contents.
    *
    * @param file1 first file to compare
    * @param file2 second file to compare
@@ -632,7 +630,7 @@ public final class FilesPlume {
   }
 
   /**
-   * Returns true iff the files have the same contents.
+   * Return true iff the files have the same contents.
    *
    * @param file1 first file to compare
    * @param file2 second file to compare
@@ -846,7 +844,7 @@ public final class FilesPlume {
   }
 
   /**
-   * Returns a string version of the filename that can be used in Java source. On Windows, the file
+   * Return a string version of the filename that can be used in Java source. On Windows, the file
    * will return a backslash-separated string. Since backslash is an escape character, it must be
    * quoted itself inside the string.
    *
@@ -874,12 +872,9 @@ public final class FilesPlume {
    */
   public static void writeObject(Object o, File file) throws IOException {
     OutputStream bytes = newBufferedFileOutputStream(file.toString(), false);
-    try (ObjectOutputStream objs = new ObjectOutputStream(bytes)) {
-      objs.writeObject(o);
-    } finally {
-      // In case objs was never set.
-      bytes.close();
-    }
+    ObjectOutputStream objs = new ObjectOutputStream(bytes);
+    objs.writeObject(o);
+    objs.close();
   }
 
   /**
@@ -894,12 +889,11 @@ public final class FilesPlume {
    */
   @SuppressWarnings("BanSerializableRead") // wrapper around dangerous API
   public static Object readObject(File file) throws IOException, ClassNotFoundException {
-    try (InputStream fis = newFileInputStream(file);
-        // 8192 is the buffer size in BufferedReader
-        InputStream istream = new BufferedInputStream(fis, 8192);
-        ObjectInputStream objs = new ObjectInputStream(istream)) {
-      return objs.readObject();
-    }
+    InputStream fis = newFileInputStream(file);
+    // 8192 is the buffer size in BufferedReader
+    InputStream istream = new BufferedInputStream(fis, 8192);
+    ObjectInputStream objs = new ObjectInputStream(istream);
+    return objs.readObject();
   }
 
   /**
@@ -936,7 +930,8 @@ public final class FilesPlume {
    */
   public static String readFile(File file) {
 
-    try (BufferedReader reader = newBufferedFileReader(file)) {
+    try {
+      BufferedReader reader = newBufferedFileReader(file);
       StringBuilder contents = new StringBuilder();
       String line = reader.readLine();
       while (line != null) {
@@ -945,6 +940,7 @@ public final class FilesPlume {
         contents.append(lineSep);
         line = reader.readLine();
       }
+      reader.close();
       return contents.toString();
     } catch (Exception e) {
       throw new Error("Unexpected error in readFile(" + file + ")", e);
@@ -961,8 +957,10 @@ public final class FilesPlume {
    */
   public static void writeFile(File file, String contents) {
 
-    try (Writer writer = Files.newBufferedWriter(file.toPath(), UTF_8)) {
+    try {
+      Writer writer = Files.newBufferedWriter(file.toPath(), UTF_8);
       writer.write(contents, 0, contents.length());
+      writer.close();
     } catch (Exception e) {
       throw new Error("Unexpected error in writeFile(" + file + ")", e);
     }
@@ -996,7 +994,7 @@ public final class FilesPlume {
   }
 
   /**
-   * Returns a String containing all the characters from the input stream.
+   * Return a String containing all the characters from the input stream.
    *
    * @param is input stream to read
    * @return a String containing all the characters from the input stream

@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.RandomAccess;
 import java.util.Set;
 import java.util.StringJoiner;
 import org.checkerframework.checker.index.qual.IndexFor;
@@ -23,7 +22,6 @@ import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.interning.qual.PolyInterned;
-import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -33,51 +31,15 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.plumelib.reflection.ReflectionPlume;
 
-/** Utilities for manipulating arrays. This complements {@link java.util.Arrays}. */
+/**
+ * Utilities for manipulating arrays and collections. This complements {@link java.util.Arrays} and
+ * {@link java.util.Collections}.
+ */
 @SuppressWarnings("interning") // to do later
 public final class ArraysPlume {
   /** This class is a collection of methods; it does not represent anything. */
   private ArraysPlume() {
     throw new Error("do not instantiate");
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  /// Creation
-  ///
-
-  /**
-   * Returns an array consisting of n copies of the specified object.
-   *
-   * @param <T> the class of the object to copy. The returned array's element type is the
-   *     <em>run-time</em> type of {@code o}.
-   * @param n the number of elements in the returned array
-   * @param o the element to appear repeatedly in the returned array; must not be null
-   * @return an array consisting of n copies of the specified object
-   */
-  public static <T extends Object> T[] nCopies(@NonNegative int n, T o) {
-    @SuppressWarnings("unchecked")
-    T[] result = (T[]) Array.newInstance(o.getClass(), n);
-    Arrays.fill(result, o);
-    return result;
-  }
-
-  /**
-   * Concatenates an array and an element into a new array.
-   *
-   * @param <T> the type of the array elements
-   * @param array the array
-   * @param lastElt the new last elemeent
-   * @return a new array containing the array elements and the last element, in that order
-   */
-  @SuppressWarnings({
-    "unchecked",
-    "index:array.access.unsafe.high" // addition in array length
-  })
-  public static <T> T[] append(T[] array, T lastElt) {
-    @SuppressWarnings({"unchecked", "nullness:assignment"})
-    T[] result = Arrays.copyOf(array, array.length + 1);
-    result[array.length] = lastElt;
-    return result;
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -87,7 +49,7 @@ public final class ArraysPlume {
   // Could also add linear-time orderStatistics if I liked.
 
   /**
-   * Returns the smallest value in the array.
+   * Return the smallest value in the array.
    *
    * @param a an array
    * @return the smallest value in the array
@@ -106,7 +68,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the smallest value in the array.
+   * Return the smallest value in the array.
    *
    * @param a an array
    * @return the smallest value in the array
@@ -125,7 +87,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the smallest value in the array.
+   * Return the smallest value in the array.
    *
    * @param a an array
    * @return the smallest value in the array
@@ -144,7 +106,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the smallest value in the array.
+   * Return the smallest value in the array.
    *
    * @param a an array
    * @return the smallest value in the array
@@ -167,7 +129,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the smallest value in the array.
+   * Return the smallest value in the array.
    *
    * @param a an array
    * @return the smallest value in the array
@@ -190,7 +152,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the smallest value in the array.
+   * Return the smallest value in the array.
    *
    * @param a an array
    * @return the smallest value in the array
@@ -213,7 +175,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the largest value in the array.
+   * Return the largest value in the array.
    *
    * @param a an array
    * @return the largest value in the array
@@ -232,7 +194,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the largest value in the array.
+   * Return the largest value in the array.
    *
    * @param a an array
    * @return the largest value in the array
@@ -251,7 +213,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the largest value in the array.
+   * Return the largest value in the array.
    *
    * @param a an array
    * @return the largest value in the array
@@ -270,7 +232,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the largest value in the array.
+   * Return the largest value in the array.
    *
    * @param a an array
    * @return the largest value in the array
@@ -293,7 +255,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the largest value in the array.
+   * Return the largest value in the array.
    *
    * @param a an array
    * @return the largest value in the array
@@ -316,7 +278,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the largest value in the array.
+   * Return the largest value in the array.
    *
    * @param a an array
    * @return the largest value in the array
@@ -339,7 +301,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a two-element array containing the smallest and largest values in the array.
+   * Return a two-element array containing the smallest and largest values in the array.
    *
    * @param a an array
    * @return a two-element array containing the smallest and largest values in the array
@@ -362,7 +324,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a two-element array containing the smallest and largest values in the array.
+   * Return a two-element array containing the smallest and largest values in the array.
    *
    * @param a an array
    * @return a two-element array containing the smallest and largest values in the array
@@ -385,7 +347,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the difference between the smallest and largest array elements.
+   * Return the difference between the smallest and largest array elements.
    *
    * @param a an array
    * @return the difference between the smallest and largest array elements
@@ -406,7 +368,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the difference between the smallest and largest array elements.
+   * Return the difference between the smallest and largest array elements.
    *
    * @param a an array
    * @return the difference between the smallest and largest array elements
@@ -514,7 +476,7 @@ public final class ArraysPlume {
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Pure
-  public static <T extends @Nullable Object> int indexOf(T[] a, @Nullable Object elt) {
+  public static <T> int indexOf(T[] a, @Nullable Object elt) {
     if (elt == null) {
       return indexOfEq(a, elt);
     }
@@ -540,7 +502,7 @@ public final class ArraysPlume {
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Pure
-  public static <T extends @Nullable Object> int indexOf(
+  public static <T> int indexOf(
       T[] a,
       @Nullable Object elt,
       @IndexFor("#1") int minindex,
@@ -1128,7 +1090,7 @@ public final class ArraysPlume {
   // index or the first non-included index.
 
   /**
-   * Returns a subarray of the given array.
+   * Return a subarray of the given array.
    *
    * @return a subarray of the given array
    * @param a the original array
@@ -1147,7 +1109,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a sublist of the given list.
+   * Return a sublist of the given list.
    *
    * @param <T> type of the elements
    * @param a the original list
@@ -1163,7 +1125,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a subarray of the given array.
+   * Return a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1182,7 +1144,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a subarray of the given array.
+   * Return a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1201,7 +1163,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a subarray of the given array.
+   * Return a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1220,7 +1182,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a subarray of the given array.
+   * Return a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1239,7 +1201,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a subarray of the given array.
+   * Return a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1258,7 +1220,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a subarray of the given array.
+   * Return a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1277,7 +1239,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a subarray of the given array.
+   * Return a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1296,7 +1258,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a subarray of the given array.
+   * Return a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1315,7 +1277,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a subarray of the given array.
+   * Return a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1616,30 +1578,8 @@ public final class ArraysPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// Concatenation
+  /// concatenation
   ///
-
-  /**
-   * Concatenates two arrays. Can be invoked varargs-style.
-   *
-   * <p>This differs from {@code concat} in that it always returns a new array, never an existing
-   * array.
-   *
-   * @param <T> the type of the array elements
-   * @param array1 the first array
-   * @param array2 the second array
-   * @return a new array containing the contents of the given arrays, in order
-   */
-  @SuppressWarnings({
-    "unchecked",
-    "index:argument" // addition for array length
-  })
-  public static <T> T[] concatenate(T[] array1, T... array2) {
-    @SuppressWarnings("nullness") // elements are not non-null yet, but will be by return stmt
-    T[] result = Arrays.copyOf(array1, array1.length + array2.length);
-    System.arraycopy(array2, 0, result, array1.length, array2.length);
-    return result;
-  }
 
   // Concat used to return null if both arguments are null.  That is
   // convenient for the implementer, but not so good for clients.
@@ -1651,7 +1591,6 @@ public final class ArraysPlume {
    * @param lst the list to convert to an array
    * @return the result of lst.toArray, casted to a more precise type than Object[]
    */
-  @SideEffectFree
   private static <T> T[] toTArray(List<T> lst) {
     @SuppressWarnings("unchecked")
     T[] asArray = (T[]) lst.toArray();
@@ -1661,10 +1600,8 @@ public final class ArraysPlume {
   /**
    * A wrapper around a list or an array (or null). Avoids code duplication for arrays and lists, at
    * the cost of object construction and method calls.
-   *
-   * @param <T> the type of array or list elements
    */
-  private static class ListOrArray<T extends @Nullable Object> {
+  private static class ListOrArray<T> {
     // At most one field is non-null.  If both are null, this object represents the null value.
     /** The array that this object wraps, or null. */
     T @Nullable [] theArray = null;
@@ -1690,21 +1627,19 @@ public final class ArraysPlume {
     }
 
     /**
-     * Returns true if this represents a null value.
+     * Return true if this represents a null value.
      *
      * @return true if this represents a null value
      */
-    @Pure
     boolean isNull() {
       return theArray == null && theList == null;
     }
 
     /**
-     * Returns the size of the collection this represents.
+     * Return the size of the collection this represents.
      *
      * @return the size of the collection this represents
      */
-    @Pure
     @NonNegative int size() {
       if (theArray != null) {
         return theArray.length;
@@ -1720,7 +1655,6 @@ public final class ArraysPlume {
      *
      * @return true if this represents an empty collection
      */
-    @Pure
     boolean isEmpty() {
       if (theArray != null) {
         return theArray.length == 0;
@@ -1732,11 +1666,10 @@ public final class ArraysPlume {
     }
 
     /**
-     * Returns an array with the same contents as this.
+     * Return an array with the same contents as this.
      *
      * @return an array with the same contents as this
      */
-    @SideEffectFree
     T[] toArray() {
       if (theArray != null) {
         return theArray;
@@ -1754,8 +1687,8 @@ public final class ArraysPlume {
      * @param destPos the index at which to start overwriting elements of {@code dest}
      */
     @SuppressWarnings({
-      "lowerbound:argument", // TODO: annotate for Index Checker
-      "index:argument" // TODO: annotate for Index Checker
+      "lowerbound:argument.type.incompatible", // TODO: annotate for Index Checker
+      "index:argument.type.incompatible" // TODO: annotate for Index Checker
     })
     void copyInto(T[] dest, int destPos) {
       if (theArray != null) {
@@ -1763,8 +1696,8 @@ public final class ArraysPlume {
       } else if (theList != null) {
         for (int i = 0; i < theList.size(); i++) {
           @SuppressWarnings({
-            "lowerbound:assignment",
-            "index:assignment"
+            "lowerbound:assignment.type.incompatible",
+            "index:assignment.type.incompatible"
           }) // index checker has no list support
           @IndexFor("dest") int index = i + destPos;
           dest[index] = theList.get(i);
@@ -1779,7 +1712,7 @@ public final class ArraysPlume {
      *
      * @return the least upper bound of the classes of the elements of this
      */
-    @Nullable Class<? extends @Nullable Object> leastUpperBound() {
+    @Nullable Class<?> leastUpperBound() {
       if (theArray != null) {
         return ReflectionPlume.leastUpperBound(theArray);
       } else if (theList != null) {
@@ -1788,101 +1721,68 @@ public final class ArraysPlume {
         throw new Error("both fields are null");
       }
     }
-
-    @Override
-    public String toString(@GuardSatisfied ListOrArray<T> this) {
-      if (theArray != null) {
-        return Arrays.toString(theArray);
-      } else if (theList != null) {
-        return theList.toString();
-      } else {
-        return "null";
-      }
-    }
-
-    /**
-     * Returns a verbose representation of this, for debugging.
-     *
-     * @return a verbose representation of this, for debugging
-     */
-    public String toStringDebug() {
-      String theArrayString;
-      if (theArray == null) {
-        theArrayString = "null";
-      } else {
-        theArrayString = Arrays.toString(theArray) + "[" + System.identityHashCode(theArray) + "]";
-      }
-      String theListString;
-      if (theList == null) {
-        theListString = "null";
-      } else {
-        theListString = theList.toString() + "[" + System.identityHashCode(theList) + "]";
-      }
-
-      return "ListOrArray(theArray=" + theArrayString + ", theList=" + theListString + ")";
-    }
   }
 
   /**
-   * Returns an array that contains all the elements of both arguments, in order. Returns an
-   * existing array if possible (when one argument is null or empty).
+   * Return an array that contains all the elements of both arguments, in order. Returns an existing
+   * array if possible (when one argument is null or empty).
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  public static <T extends @Nullable Object> T[] concat(T @Nullable [] a, T @Nullable [] b) {
+  public static <T> T[] concat(T @Nullable [] a, T @Nullable [] b) {
     return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
   /**
-   * Returns an array that contains all the elements of both arguments, in order. Returns the array
-   * argument if the list argument is null or empty.
+   * Return an array that contains all the elements of both arguments, in order. Returns an existing
+   * array if the list argument is null or empty.
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  public static <T extends @Nullable Object> T[] concat(T @Nullable [] a, @Nullable List<T> b) {
+  public static <T> T[] concat(T @Nullable [] a, @Nullable List<T> b) {
     return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
   /**
-   * Returns an array that contains all the elements of both arguments, in order. Returns the array
-   * argument if the list argument is null or empty.
+   * Return an array that contains all the elements of both arguments, in order. Returns an existing
+   * array if the list argument is null or empty.
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  public static <T extends @Nullable Object> T[] concat(@Nullable List<T> a, T @Nullable [] b) {
+  public static <T> T[] concat(@Nullable List<T> a, T @Nullable [] b) {
     return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
   /**
-   * Returns an array that contains all the elements of both arguments, in order.
+   * Return an array that contains all the elements of both arguments, in order.
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  public static <T extends @Nullable Object> T[] concat(@Nullable List<T> a, @Nullable List<T> b) {
+  public static <T> T[] concat(@Nullable List<T> a, @Nullable List<T> b) {
     return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
   /**
-   * Returns an array that contains all the elements of both arguments, in order.
+   * Return an array that contains all the elements of both arguments, in order.
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  private static <T extends @Nullable Object> T[] concat(ListOrArray<T> a, ListOrArray<T> b) {
+  private static <T> T[] concat(ListOrArray<T> a, ListOrArray<T> b) {
     if (a.isNull() && b.isNull()) {
       @SuppressWarnings("unchecked")
       T[] result = (T[]) new Object[0];
@@ -1923,8 +1823,8 @@ public final class ArraysPlume {
 
   // Note: PolyAll is not quite right.  Need to review.
   /**
-   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
-   * new array unless one argument is null or empty, in which case it returns the other array.
+   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
+   * array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first array to concatenate
    * @param b the second array to concatenate
@@ -1933,17 +1833,18 @@ public final class ArraysPlume {
   public static @PolyNull @PolyInterned String[] concat(
       @PolyNull @PolyInterned String @Nullable [] a,
       @PolyNull @PolyInterned String @Nullable [] b) {
-    if (a == null || a.length == 0) {
+    if (a == null) {
       if (b == null) {
         return new String[0];
       } else {
         return b;
       }
     } else {
-      if (b == null || b.length == 0) {
+      if (b == null) {
         return a;
       } else {
         @PolyNull @PolyInterned String[] result = new String[a.length + b.length];
+
         System.arraycopy(a, 0, result, 0, a.length);
         System.arraycopy(b, 0, result, a.length, b.length);
         return result;
@@ -1952,8 +1853,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
-   * new array unless one argument is null, in which case it returns the other array.
+   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
+   * array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -1981,8 +1882,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
-   * new array unless one argument is null, in which case it returns the other array.
+   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
+   * array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2010,8 +1911,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
-   * new array unless one argument is null, in which case it returns the other array.
+   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
+   * array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2039,8 +1940,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
-   * new array unless one argument is null, in which case it returns the other array.
+   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
+   * array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2068,8 +1969,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
-   * new array unless one argument is null, in which case it returns the other array.
+   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
+   * array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2097,8 +1998,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
-   * new array unless one argument is null, in which case it returns the other array.
+   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
+   * array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2126,8 +2027,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
-   * new array unless one argument is null, in which case it returns the other array.
+   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
+   * array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2155,8 +2056,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
-   * new array unless one argument is null, in which case it returns the other array.
+   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
+   * array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2263,7 +2164,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a string representation of the array. The representation is patterned after that of
+   * Return a string representation of the array. The representation is patterned after that of
    * java.util.ArrayList.
    *
    * @param a an array
@@ -2276,7 +2177,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a string representation of the array. The representation is patterned after that of
+   * Return a string representation of the array. The representation is patterned after that of
    * java.util.ArrayList. Furthermore, each element is quoted like a Java String.
    *
    * @param a an array
@@ -2289,7 +2190,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a string representation of the array. The representation is patterned after that of
+   * Return a string representation of the array. The representation is patterned after that of
    * java.util.ArrayList. Furthermore, if quoted is true, then each element is quoted like a Java
    * String.
    *
@@ -2317,8 +2218,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a string representation of the collection. The representation is patterned after that
-   * of java.util.ArrayList.
+   * Return a string representation of the collection. The representation is patterned after that of
+   * java.util.ArrayList.
    *
    * @param a a collection
    * @return a string representation of the collection
@@ -2330,8 +2231,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a string representation of the collection. The representation is patterned after that
-   * of java.util.ArrayList.
+   * Return a string representation of the collection. The representation is patterned after that of
+   * java.util.ArrayList.
    *
    * @param a a collection
    * @return a string representation of the collection, with the elements quoted
@@ -2343,8 +2244,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a string representation of the collection. The representation is patterned after that
-   * of java.util.ArrayList. The representation permits quoting (or not) of strings.
+   * Return a string representation of the collection. The representation is patterned after that of
+   * java.util.ArrayList. The representation permits quoting (or not) of strings.
    *
    * @param a a collection
    * @param quoted whether to quote the collection elements that are Java strings
@@ -2437,224 +2338,151 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns true iff a contains duplicate elements.
-   *
-   * <p>The implementation uses O(n) time and O(n) space.
-   *
-   * @param a an array
-   * @return true iff a contains duplicate elements
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
-  @Pure
-  public static boolean hasDuplicates(boolean[] a) {
-    Set<Boolean> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Returns true iff a does not contain duplicate elements.
+   * Return true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(boolean[] a) {
-    return !hasDuplicates(a);
-  }
-
-  /**
-   * Returns true iff a contains duplicate elements.
-   *
-   * <p>The implementation uses O(n) time and O(n) space.
-   *
-   * @param a an array
-   * @return true iff a contains duplicate elements
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
-  @Pure
-  public static boolean hasDuplicates(byte[] a) {
-    Set<Byte> hs = new HashSet<>();
+    HashSet<Boolean> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
-        return true;
+      // Could be optimized not to add the last element,
+      // but that would make the code much less readable.
+      Boolean n = Boolean.valueOf(a[i]);
+      if (hs.contains(n)) {
+        return false;
       }
+      hs.add(n);
     }
-    return false;
+    return true;
   }
 
   /**
-   * Returns true iff a does not contain duplicate elements.
+   * Return true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(byte[] a) {
-    return !hasDuplicates(a);
-  }
-
-  /**
-   * Returns true iff a contains duplicate elements.
-   *
-   * <p>The implementation uses O(n) time and O(n) space.
-   *
-   * @param a an array
-   * @return true iff a contains duplicate elements
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
-  @Pure
-  public static boolean hasDuplicates(char[] a) {
-    Set<Character> hs = new HashSet<>();
+    HashSet<Byte> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
-        return true;
+      // Could be optimized not to add the last element,
+      // but that would make the code much less readable.
+      Byte n = a[i];
+      if (hs.contains(n)) {
+        return false;
       }
+      hs.add(n);
     }
-    return false;
+    return true;
   }
 
   /**
-   * Returns true iff a does not contain duplicate elements.
+   * Return true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(char[] a) {
-    return !hasDuplicates(a);
-  }
-
-  /**
-   * Returns true iff a contains duplicate elements.
-   *
-   * <p>The implementation uses O(n) time and O(n) space.
-   *
-   * @param a an array
-   * @return true iff a contains duplicate elements
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
-  @Pure
-  public static boolean hasDuplicates(float[] a) {
-    Set<Float> hs = new HashSet<>();
+    HashSet<Character> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
-        return true;
+      // Could be optimized not to add the last element,
+      // but that would make the code much less readable.
+      Character n = a[i];
+      if (hs.contains(n)) {
+        return false;
       }
+      hs.add(n);
     }
-    return false;
+    return true;
   }
 
   /**
-   * Returns true iff a does not contain duplicate elements.
+   * Return true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(float[] a) {
-    return !hasDuplicates(a);
-  }
-
-  /**
-   * Returns true iff a contains duplicate elements.
-   *
-   * <p>The implementation uses O(n) time and O(n) space.
-   *
-   * @param a an array
-   * @return true iff a contains duplicate elements
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
-  @Pure
-  public static boolean hasDuplicates(short[] a) {
-    Set<Short> hs = new HashSet<>();
+    HashSet<Float> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
-        return true;
+      // Could be optimized not to add the last element,
+      // but that would make the code much less readable.
+      Float n = a[i];
+      if (hs.contains(n)) {
+        return false;
       }
+      hs.add(n);
     }
-    return false;
+    return true;
   }
 
   /**
-   * Returns true iff a does not contain duplicate elements.
+   * Return true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(short[] a) {
-    return !hasDuplicates(a);
-  }
-
-  /**
-   * Returns true iff a contains duplicate elements.
-   *
-   * <p>The implementation uses O(n) time and O(n) space.
-   *
-   * @param a an array
-   * @return true iff a contains duplicate elements
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
-  @Pure
-  public static boolean hasDuplicates(int[] a) {
-    Set<Integer> hs = new HashSet<>();
+    HashSet<Short> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
-        return true;
+      // Could be optimized not to add the last element,
+      // but that would make the code much less readable.
+      Short n = a[i];
+      if (hs.contains(n)) {
+        return false;
       }
+      hs.add(n);
     }
-    return false;
+    return true;
   }
 
   /**
-   * Returns true iff a does not contain duplicate elements.
+   * Return true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(int[] a) {
-    return !hasDuplicates(a);
+    HashSet<Integer> hs = new HashSet<>();
+    for (int i = 0; i < a.length; i++) {
+      // Could be optimized not to add the last element,
+      // but that would make the code much less readable.
+      Integer n = a[i];
+      if (hs.contains(n)) {
+        return false;
+      }
+      hs.add(n);
+    }
+    return true;
   }
 
   /**
-   * Returns true iff a contains duplicate elements. Equality checking uses {@link Double#equals}.
-   *
-   * <p>The implementation uses O(n) time and O(n) space.
-   *
-   * @param a an array
-   * @return true iff a contains duplicate elements
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
-  @Pure
-  public static boolean hasDuplicates(double[] a) {
-    Set<Double> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
-        return true;
-      }
-    }
-    return false;
-  }
-  /**
-   * Returns true iff a does not contain duplicate elements. Equality checking uses {@link
+   * Return true iff a does not contain duplicate elements. Equality checking uses {@link
    * Double#equals}.
    *
    * <p>The implementation uses O(n) time and O(n) space.
@@ -2662,142 +2490,112 @@ public final class ArraysPlume {
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(double[] a) {
-    return !hasDuplicates(a);
-  }
-
-  /**
-   * Returns true iff a contains duplicate elements.
-   *
-   * <p>The implementation uses O(n) time and O(n) space.
-   *
-   * @param a an array
-   * @return true iff a contains duplicate elements
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
-  @Pure
-  public static boolean hasDuplicates(long[] a) {
-    Set<Long> hs = new HashSet<>();
+    HashSet<Double> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
-        return true;
+      // Could be optimized not to create the last element,
+      // but that would make the code much less readable.
+      Double n = a[i];
+      if (hs.contains(n)) {
+        return false;
       }
+      hs.add(n);
     }
-    return false;
+    return true;
   }
 
   /**
-   * Returns true iff a does not contain duplicate elements.
+   * Return true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(long[] a) {
-    return !hasDuplicates(a);
-  }
-
-  /**
-   * Returns true iff a contains duplicate elements.
-   *
-   * <p>The implementation uses O(n) time and O(n) space.
-   *
-   * @param a an array
-   * @return true iff a contains duplicate elements
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
-  @Pure
-  public static boolean hasDuplicates(String[] a) {
-    HashSet<String> hs = new HashSet<>();
+    HashSet<Long> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
-        return true;
+      // Could be optimized not to create the last element,
+      // but that would make the code much less readable.
+      Long n = a[i];
+      if (hs.contains(n)) {
+        return false;
       }
+      hs.add(n);
     }
-    return false;
+    return true;
   }
 
   /**
-   * Returns true iff a does not contain duplicate elements.
+   * Return true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(String[] a) {
-    return !hasDuplicates(a);
-  }
-
-  /**
-   * Returns true iff a contains duplicate elements.
-   *
-   * <p>The implementation uses O(n) time and O(n) space.
-   *
-   * @param a an array
-   * @return true iff a contains duplicate elements
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
-  @Pure
-  public static boolean hasDuplicates(Object[] a) {
-    HashSet<Object> hs = new HashSet<>();
+    HashSet<String> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
-        return true;
+      if (hs.contains(a[i])) {
+        return false;
       }
+      // Could be optimized not to add the last element,
+      // but that would make the code much less readable.
+      hs.add(a[i]);
     }
-    return false;
+    return true;
   }
 
   /**
-   * Returns true iff a does not contain duplicate elements.
+   * Return true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(Object[] a) {
-    return !hasDuplicates(a);
+    HashSet<Object> hs = new HashSet<>();
+    for (int i = 0; i < a.length; i++) {
+      if (hs.contains(a[i])) {
+        return false;
+      }
+      // Could be optimized not to add the last element,
+      // but that would make the code much less readable.
+      hs.add(a[i]);
+    }
+    return true;
   }
 
   /**
-   * Returns true iff the list does not contain duplicate elements.
+   * Return true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param <T> the type of the elements
    * @param a a list
    * @return true iff a does not contain duplicate elements
-   * @deprecated use {@link CollectionsPlume#noDuplicates}
    */
-  @Deprecated // 2021-04-09
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static <T> boolean noDuplicates(List<T> a) {
-    if (a instanceof RandomAccess) {
-      HashSet<T> hs = new HashSet<>();
-      for (int i = 0; i < a.size(); i++) {
-        T elt = a.get(i);
-        if (!hs.add(elt)) {
-          return false;
-        }
+    HashSet<T> hs = new HashSet<>();
+    for (int i = 0; i < a.size(); i++) {
+      T elt = a.get(i);
+      if (!hs.add(elt)) {
+        return false;
       }
-      return true;
-    } else {
-      HashSet<T> hs = new HashSet<>();
-      for (T elt : a) {
-        if (!hs.add(elt)) {
-          return false;
-        }
-      }
-      return true;
     }
+    return true;
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -2826,7 +2624,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns true iff the array does not contain -1.
+   * Return true iff the array does not contain -1.
    *
    * @param a an array, representing a function
    * @return true iff no element of a maps to -1
@@ -2837,7 +2635,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns an array [0..length).
+   * Return an array [0..length).
    *
    * @param length the length of the result
    * @return fresh array that is the identity function of the given length
@@ -2857,13 +2655,12 @@ public final class ArraysPlume {
    * @return fresh array which is the inverse of the given permutation
    * @see #fnIsPermutation(int[])
    */
-  @SideEffectFree
   public static int[] fnInversePermutation(int[] a) {
     return fnInverse(a, a.length);
   }
 
   /**
-   * Returns the inverse of the given function, which is represented as an array.
+   * Return the inverse of the given function, which is represented as an array.
    *
    * @param a an array representing a function from [0..a.length) to [0..arange); each element of a
    *     is between 0 (inclusive) and arange (exclusive)
@@ -2872,11 +2669,6 @@ public final class ArraysPlume {
    * @throws IllegalArgumentException if a value of a is outside of arange
    * @exception UnsupportedOperationException when the function is not invertible
    */
-  @SuppressWarnings({
-    "allcheckers:purity",
-    "lock:method.guarantee.violated"
-  }) // side effect to local state
-  @SideEffectFree
   public static int[] fnInverse(int[] a, @NonNegative int arange) {
     int[] result = new int[arange];
     Arrays.fill(result, -1);
@@ -2898,14 +2690,12 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the composition of the given two functions, all of which are represented as arrays.
+   * Return the composition of the given two functions, all of which are represented as arrays.
    *
    * @param a function from [0..a.length) to [0..b.length)
    * @param b function from [0..b.length) to range R
    * @return function from [0..a.length) to range R that is the composition of a and b
    */
-  @SuppressWarnings("allcheckers:purity") // side effect to local state
-  @SideEffectFree
   public static int @SameLen("#1") [] fnCompose(@IndexFor("#2") int[] a, int[] b) {
     int[] result = new int[a.length];
     for (int i = 0; i < a.length; i++) {
@@ -2915,7 +2705,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the composition of the given two (possibly partial) functions, all of which are
+   * Return the composition of the given two (possibly partial) functions, all of which are
    * represented as arrays.
    *
    * @param a function from [0..a.length) to [-1..b.length)
@@ -2923,8 +2713,6 @@ public final class ArraysPlume {
    * @return function from [0..a.length) to {range R} union {-1}, that is the composition of a and
    *     b.
    */
-  @SuppressWarnings("allcheckers:purity") // side effect to local state
-  @SideEffectFree
   public static int @SameLen("#1") [] partialFnCompose(@IndexOrLow("#2") int[] a, int[] b) {
     int[] result = new int[a.length];
     for (int i = 0; i < a.length; i++) {
@@ -2946,7 +2734,7 @@ public final class ArraysPlume {
   // might be quicker when it is not.  Sorting both sets has (minimum
   // and maximum) running time of Theta(n log n).
   /**
-   * Returns whether smaller is a subset of bigger.
+   * Return whether smaller is a subset of bigger.
    *
    * <p>The implementation is to use collections because we want to take advantage of HashSet's
    * constant time membership tests.
@@ -2965,7 +2753,8 @@ public final class ArraysPlume {
     }
 
     for (int i = 0; i < smaller.length; i++) {
-      if (!setBigger.contains(smaller[i])) {
+      Long elt = smaller[i];
+      if (!setBigger.contains(elt)) {
         return false;
       }
     }
@@ -2977,7 +2766,7 @@ public final class ArraysPlume {
   // might be quicker when it is not.  Sorting both sets has (minimum
   // and maximum) running time of Theta(n log n).
   /**
-   * Returns whether smaller is a subset of bigger.
+   * Return whether smaller is a subset of bigger.
    *
    * <p>The implementation is to use collections because we want to take advantage of HashSet's
    * constant time membership tests.
@@ -2996,7 +2785,8 @@ public final class ArraysPlume {
     }
 
     for (int i = 0; i < smaller.length; i++) {
-      if (!setBigger.contains(smaller[i])) {
+      Double elt = smaller[i];
+      if (!setBigger.contains(elt)) {
         return false;
       }
     }
@@ -3008,7 +2798,7 @@ public final class ArraysPlume {
   // might be quicker when it is not.  Sorting both sets has (minimum
   // and maximum) running time of Theta(n log n).
   /**
-   * Returns whether smaller is a subset of bigger.
+   * Return whether smaller is a subset of bigger.
    *
    * <p>The implementation is to use collections because we want to take advantage of HashSet's
    * constant time membership tests.
@@ -3033,27 +2823,6 @@ public final class ArraysPlume {
     }
 
     return true;
-  }
-
-  /**
-   * Returns true if the arrays contain the same contents, treated as a set (order and duplicates do
-   * not matter).
-   *
-   * @param <T> the type of the array contents
-   * @param arr1 an array
-   * @param arr2 an array
-   * @return true if the arrays contain the same contents
-   */
-  public static <T> boolean sameContents(T[] arr1, T[] arr2) {
-    List<T> list1 = Arrays.asList(arr1);
-    List<T> list2 = Arrays.asList(arr2);
-    return list1.containsAll(list2) && list2.containsAll(list1);
-
-    // // Alterate implementation, which is more efficient if the arrays are large:
-    // Note: this sorts the arrays as a side effect.
-    // Arrays.sort(arr1);
-    // Arrays.sort(arr2);
-    // return Arrays.equals(arr1, arr2);
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -3471,8 +3240,7 @@ public final class ArraysPlume {
     static final long serialVersionUID = 20150812L;
 
     /**
-     * Compare two arrays by length, then lexically (element-by-element). Null elements are
-     * considered smaller than non-null elements.
+     * Compare two arrays by length, then lexically (element-by-element).
      *
      * @param a1 first array to compare
      * @param a2 second array to compare
@@ -3507,7 +3275,7 @@ public final class ArraysPlume {
   ///
 
   /**
-   * Returns true if a contains null.
+   * Return true if a contains null.
    *
    * @param a an array
    * @return true iff some element of a is null (false if a is zero-sized)
@@ -3522,7 +3290,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns true if all elements of a are null.
+   * Return true if all elements of a are null.
    *
    * @param a an array
    * @return true iff all elements of a are null (unspecified result if a is zero-sized)
@@ -3538,13 +3306,13 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns true if a contains null.
+   * Return true if a contains null.
    *
    * @param a an array
    * @return true iff some element of a is null (false if a is zero-sized)
    */
   @Pure
-  public static boolean anyNull(List<? extends @Nullable Object> a) {
+  public static boolean anyNull(List<?> a) {
     if (a.size() == 0) {
       return false;
     }
@@ -3553,7 +3321,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns true if all elements of a are null.
+   * Return true if all elements of a are null.
    *
    * @param a an array
    * @return true iff all elements of a are null (unspecified result if a is zero-sized)
@@ -3730,7 +3498,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns a singleton ArrayList containing the given element.
+   * Return a singleton ArrayList containing the given element.
    *
    * @param <T> the element type of the list
    * @param elt the element to put in the ArrayList
@@ -3743,7 +3511,7 @@ public final class ArraysPlume {
   }
 
   // /**
-  //  * Returns a singleton ArrayDeque containing the given element.
+  //  * Return a singleton ArrayDeque containing the given element.
   //  *
   //  * @param <T> the element type of the list
   //  * @param elt the element to put in the ArrayDeque

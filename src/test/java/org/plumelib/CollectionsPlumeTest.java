@@ -1,7 +1,6 @@
 package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.DateFormat;
@@ -11,7 +10,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -111,17 +109,6 @@ public final class CollectionsPlumeTest {
   ///
 
   @Test
-  public void testListOf() {
-    assertEquals(Arrays.asList("a", "b"), CollectionsPlume.listOf("a", "b"));
-  }
-
-  @Test
-  public void testAppend() {
-    assertEquals(
-        Arrays.asList("a", "b", "c"), CollectionsPlume.append(Arrays.asList("a", "b"), "c"));
-  }
-
-  @Test
   public void testMergedIterator() {
 
     // public static class EnumerationIterator implements Iterator
@@ -191,8 +178,14 @@ public final class CollectionsPlumeTest {
   @Test
   public void testRemoveFirstAndLastIterator() {
 
-    List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
-    List<Integer> iota5middle = Arrays.asList(1, 2, 3);
+    ArrayList<Integer> iota5 = new ArrayList<>();
+    for (int i = 0; i < 5; i++) {
+      iota5.add(i);
+    }
+    ArrayList<Integer> iota5middle = new ArrayList<>();
+    for (int i = 1; i < 4; i++) {
+      iota5middle.add(i);
+    }
     CollectionsPlume.RemoveFirstAndLastIterator<Integer> rfali =
         new CollectionsPlume.RemoveFirstAndLastIterator<Integer>(iota5.iterator());
     ArrayList<Integer> rfali_vector = toArrayList(rfali);
@@ -232,8 +225,8 @@ public final class CollectionsPlumeTest {
           }
         }
         @SuppressWarnings({
-          "lowerbound:assignment",
-          "index:assignment",
+          "lowerbound:assignment.type.incompatible",
+          "index:assignment.type.incompatible",
           "value"
         }) // The IotaIterator only contains indexes for totals.length, and since chosen's
         // elements are selected randomly from the IotaIterator, all of its elements are
@@ -267,58 +260,46 @@ public final class CollectionsPlumeTest {
     }
   }
 
-  List<Integer> l123 = Arrays.asList(1, 2, 3);
-  List<Integer> l123123 = Arrays.asList(1, 2, 3, 1, 2, 3);
-  List<Integer> l12223 = Arrays.asList(1, 2, 2, 2, 3);
-  List<Integer> l1123 = Arrays.asList(1, 1, 2, 3);
-  List<Integer> l1233 = Arrays.asList(1, 2, 3, 3);
-
-  @SuppressWarnings("JdkObsolete") // test of List that does not implement RandomAccess
-  @Test
-  public void test_hasDuplicates() {
-    assertFalse(CollectionsPlume.hasDuplicates(l123));
-    assertTrue(CollectionsPlume.hasDuplicates(l123123));
-    assertTrue(CollectionsPlume.hasDuplicates(l12223));
-    assertTrue(CollectionsPlume.hasDuplicates(l1123));
-    assertTrue(CollectionsPlume.hasDuplicates(l1233));
-
-    assertFalse(CollectionsPlume.hasDuplicates(new LinkedList<>(l123)));
-    assertTrue(CollectionsPlume.hasDuplicates(new LinkedList<>(l123123)));
-    assertTrue(CollectionsPlume.hasDuplicates(new LinkedList<>(l12223)));
-    assertTrue(CollectionsPlume.hasDuplicates(new LinkedList<>(l1123)));
-    assertTrue(CollectionsPlume.hasDuplicates(new LinkedList<>(l1233)));
-  }
-
   @SuppressWarnings("ArrayEquals")
   @Test
-  public void test_withoutDuplicates() {
+  public void testRemoveDuplicates() {
 
     // public static List sortList (List l, Comparator c)
-    // public static <T> List<T> withoutDuplicates(List<T> l) {
+    // public static <T> List<T> removeDuplicates(List<T> l) {
 
-    assertEquals(l123, CollectionsPlume.withoutDuplicates(l123));
-    assertEquals(l123, CollectionsPlume.withoutDuplicates(l123123));
-    assertEquals(l123, CollectionsPlume.withoutDuplicates(l12223));
-    assertEquals(l123, CollectionsPlume.withoutDuplicates(l1123));
-    assertEquals(l123, CollectionsPlume.withoutDuplicates(l1233));
-  }
+    List<Integer> l123 = new ArrayList<>();
+    l123.add(1);
+    l123.add(2);
+    l123.add(3);
+    List<Integer> l123123 = new ArrayList<>();
+    l123123.add(1);
+    l123123.add(2);
+    l123123.add(3);
+    l123123.add(1);
+    l123123.add(2);
+    l123123.add(3);
+    List<Integer> l12223 = new ArrayList<>();
+    l12223.add(1);
+    l12223.add(2);
+    l12223.add(2);
+    l12223.add(2);
+    l12223.add(3);
+    List<Integer> l1123 = new ArrayList<>();
+    l1123.add(1);
+    l1123.add(1);
+    l1123.add(2);
+    l1123.add(3);
+    List<Integer> l1233 = new ArrayList<>();
+    l1233.add(1);
+    l1233.add(1);
+    l1233.add(2);
+    l1233.add(3);
 
-  @Test
-  public void testIsSorted() {
-    assertTrue(CollectionsPlume.isSorted(l123));
-    assertFalse(CollectionsPlume.isSorted(l123123));
-    assertTrue(CollectionsPlume.isSorted(l12223));
-    assertTrue(CollectionsPlume.isSorted(l1123));
-    assertTrue(CollectionsPlume.isSorted(l1233));
-  }
-
-  @Test
-  public void testIsSortedNoDuplicates() {
-    assertTrue(CollectionsPlume.isSortedNoDuplicates(l123));
-    assertFalse(CollectionsPlume.isSortedNoDuplicates(l123123));
-    assertFalse(CollectionsPlume.isSortedNoDuplicates(l12223));
-    assertFalse(CollectionsPlume.isSortedNoDuplicates(l1123));
-    assertFalse(CollectionsPlume.isSortedNoDuplicates(l1233));
+    assertTrue(CollectionsPlume.removeDuplicates(l123).equals(l123));
+    assertTrue(CollectionsPlume.removeDuplicates(l123123).equals(l123));
+    assertTrue(CollectionsPlume.removeDuplicates(l12223).equals(l123));
+    assertTrue(CollectionsPlume.removeDuplicates(l1123).equals(l123));
+    assertTrue(CollectionsPlume.removeDuplicates(l1233).equals(l123));
   }
 
   @Test
@@ -354,19 +335,11 @@ public final class CollectionsPlumeTest {
   }
 
   @Test
-  @SuppressWarnings("lock:methodref.receiver")
+  @SuppressWarnings("lock:methodref.receiver.invalid")
   public void testMapList() {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
     assertEquals(out, CollectionsPlume.mapList(Object::toString, in));
-  }
-
-  @Test
-  @SuppressWarnings("lock:methodref.receiver")
-  public void testTransform() {
-    List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
-    List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
-    assertEquals(out, CollectionsPlume.transform(in, Object::toString));
   }
 
   /** Tests UtilPlume createCombinations routines. */

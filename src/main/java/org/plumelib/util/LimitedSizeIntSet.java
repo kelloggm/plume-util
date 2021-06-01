@@ -117,7 +117,8 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
     int[] svalues = s.values;
     for (int i = 0; i < s.size(); i++) {
       @SuppressWarnings(
-          "index:assignment" // svalues is the internal rep of s, and s.size() <= s.values.length
+          "index:assignment.type.incompatible" // svalues is the internal rep of s, and s.size() <=
+      // s.values.length
       )
       @IndexFor("svalues") int index = i;
       add(svalues[index]);
@@ -128,7 +129,7 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
   }
 
   /**
-   * Returns true if this set contains the given element.
+   * Return true if this set contains the given element.
    *
    * @param elt the element whose membership to test
    * @return true if this set contains {@code elt}

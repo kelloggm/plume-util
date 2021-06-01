@@ -31,12 +31,12 @@ public final class UtilPlumeTest {
       intersection.and(b2);
       int card = intersection.cardinality();
       for (int j = 0; j < 100; j++) {
-        assertTrue(CollectionsPlume.intersectionCardinalityAtLeast(b1, b2, j) == (card >= j));
+        assertTrue(UtilPlume.intersectionCardinalityAtLeast(b1, b2, j) == (card >= j));
       }
       intersection.and(b3);
       card = intersection.cardinality();
       for (int j = 0; j < 100; j++) {
-        assertTrue(CollectionsPlume.intersectionCardinalityAtLeast(b1, b2, b3, j) == (card >= j));
+        assertTrue(UtilPlume.intersectionCardinalityAtLeast(b1, b2, b3, j) == (card >= j));
       }
     }
   }
@@ -52,7 +52,7 @@ public final class UtilPlumeTest {
   // public static <K,V> Collection<@KeyFor("#1") K>
   //     sortedKeySet(Map<K,V> m, Comparator<K> comparator) {
 
-  // public static boolean gotBooleanProperty(Properties p, String key)
+  // public static boolean propertyIsTrue(Properties p, String key)
   // public static String appendProperty(Properties p, String key, String value)
   // public static String setDefault(Properties p, String key, String value)
   // public static void streamCopy(java.io.InputStream from, java.io.OutputStream to)

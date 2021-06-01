@@ -71,7 +71,7 @@ public final class FileWriterWithName extends FileWriter {
   }
 
   /**
-   * Returns the name of the file being written by this.
+   * Return the name of the file being written by this.
    *
    * @return the name of the file being written by this
    */
@@ -83,7 +83,7 @@ public final class FileWriterWithName extends FileWriter {
   }
 
   /**
-   * Returns the name of the file being written by this.
+   * Return the name of the file being written by this.
    *
    * @return the name of the file being written by this
    */

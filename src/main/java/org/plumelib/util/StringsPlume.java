@@ -9,7 +9,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -56,7 +55,7 @@ public final class StringsPlume {
    * @return the target with an occurrence of oldStr at the start replaced by newStr; returns the
    *     target if it does not start with oldStr
    */
-  @SuppressWarnings("index:argument") // startsWith implies indexes fit
+  @SuppressWarnings("index:argument.type.incompatible") // startsWith implies indexes fit
   @SideEffectFree
   public static String replacePrefix(String target, String oldStr, String newStr) {
     if (target.startsWith(oldStr)) {
@@ -83,7 +82,7 @@ public final class StringsPlume {
    * @return the target with an occurrence of oldStr at the start replaced by newStr; returns the
    *     target if it does not start with oldStr
    */
-  @SuppressWarnings("lowerbound:argument") // endsWith implies indexes fit
+  @SuppressWarnings("lowerbound:argument.type.incompatible") // endsWith implies indexes fit
   @SideEffectFree
   public static String replaceSuffix(String target, String oldStr, String newStr) {
     if (target.endsWith(oldStr)) {
@@ -97,26 +96,12 @@ public final class StringsPlume {
     }
   }
 
-  /**
-   * Replaces every (non-overlapping) match for a regexp. Like {@code String.replaceAll}, but
-   * slightly more efficient because the regex has been pre-compiled.
-   *
-   * @param s a string in which to replace
-   * @param regex a regular expression
-   * @param replacement the replacement for each match of the regular expression
-   * @return the string, with each match for the regex replaced
-   */
-  public static String replaceAll(String s, Pattern regex, String replacement) {
-    Matcher m = regex.matcher(s);
-    return m.replaceAll(replacement);
-  }
-
   ///////////////////////////////////////////////////////////////////////////
   /// Prefixing and indentation
   ///
 
   /**
-   * Returns the printed represenation of a value, with each line prefixed by another string.
+   * Return the printed represenation of a value, with each line prefixed by another string.
    *
    * @param prefix the prefix to place before each line
    * @param o the value to be printed
@@ -128,7 +113,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns the printed represenation of a value, with each line (except the first) prefixed by
+   * Return the printed represenation of a value, with each line (except the first) prefixed by
    * another string.
    *
    * @param prefix the prefix to place before each line
@@ -145,8 +130,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns the printed representation of a value, with each line indented by {@code indent}
-   * spaces.
+   * Return the printed representation of a value, with line indented by {@code indent} spaces.
    *
    * @param indent the number of spaces to indent
    * @param o the value whose printed representation string to increase indentation of
@@ -163,7 +147,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns the printed representation of a value, with each line (except the first) indented by
+   * Return the printed representation of a value, with each line (except the first) indented by
    * {@code indent} spaces.
    *
    * @param indent the number of spaces to indent
@@ -185,7 +169,7 @@ public final class StringsPlume {
   ///
 
   /**
-   * Returns an array of Strings, one for each line in the argument. Always returns an array of
+   * Return an array of Strings, one for each line in the argument. Always returns an array of
    * length at least 1 (it might contain only the empty string). All common line separators (cr, lf,
    * cr-lf, or lf-cr) are supported. Note that a string that ends with a line separator will return
    * an empty string as the last element of the array.
@@ -299,9 +283,8 @@ public final class StringsPlume {
   ///
 
   /**
-   * Escapes a String so that it is expressible in a string literal in Java source code. By
-   * surrounding the return value with double quote marks, the result will be a Java string literal
-   * denoting the original string.
+   * Escapes a String so that it is expressible in Java source code. By surrounding the return value
+   * with double quote marks, the result will be a Java string literal denoting the original string.
    *
    * <p>Returns a new string only if any modifications were necessary.
    *
@@ -325,52 +308,16 @@ public final class StringsPlume {
       char c = orig.charAt(i);
       switch (c) {
         case '\"':
-          if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
-          }
-          sb.append("\\\"");
-          postEsc = i + 1;
-          break;
         case '\\':
-          if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
-          }
-          sb.append("\\\\");
-          postEsc = i + 1;
-          break;
         case '\b':
-          if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
-          }
-          sb.append("\\b");
-          postEsc = i + 1;
-          break;
         case '\f':
-          if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
-          }
-          sb.append("\\f");
-          postEsc = i + 1;
-          break;
         case '\n': // not lineSep
-          if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
-          }
-          sb.append("\\n"); // not lineSep
-          postEsc = i + 1;
-          break;
         case '\r':
-          if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
-          }
-          sb.append("\\r");
-          postEsc = i + 1;
-          break;
         case '\t':
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
-          sb.append("\\t");
+          sb.append(escapeJava(c));
           postEsc = i + 1;
           break;
 
@@ -401,29 +348,25 @@ public final class StringsPlume {
     return sb.toString();
   }
 
+  // If the overhead of this is too high to call in escapeJava(String), then inline it there.
   /**
-   * Like {@link #escapeJava(String)}, but for a single character. Note that this quotes its
-   * argument for inclusion in a string literal, not in a character literal.
+   * Like {@link #escapeJava(String)}, but for a single character.
    *
    * @param ch character to quote
    * @return quoted version of ch
-   * @deprecated use {@link #escapeJava(String)} or {@link #charLiteral(Character)}
    */
-  @Deprecated // 2021-03-14
   @SideEffectFree
   public static String escapeJava(Character ch) {
     return escapeJava(ch.charValue());
   }
 
+  // If the overhead of this is too high to call in escapeJava(String), then inline it there.
   /**
-   * Like {@link #escapeJava(String)}, but for a single character. Note that this quotes its
-   * argument for inclusion in a string literal, not in a character literal.
+   * Like {@link #escapeJava(String)}, but for a single character.
    *
    * @param c character to quote
    * @return quoted version of ch
-   * @deprecated use {@link #escapeJava(String)} or {@link #charLiteral(char)}
    */
-  @Deprecated // 2021-03-14
   @SideEffectFree
   public static String escapeJava(char c) {
     switch (c) {
@@ -443,45 +386,6 @@ public final class StringsPlume {
         return "\\t";
       default:
         return new String(new char[] {c});
-    }
-  }
-
-  /**
-   * Given a character, returns a Java character literal denoting the character.
-   *
-   * @param ch character to quote
-   * @return quoted version of ch
-   */
-  @SideEffectFree
-  public static String charLiteral(Character ch) {
-    return charLiteral(ch.charValue());
-  }
-
-  /**
-   * Given a character, returns a Java character literal denoting the character.
-   *
-   * @param c character to quote
-   * @return quoted version of ch
-   */
-  @SideEffectFree
-  public static String charLiteral(char c) {
-    switch (c) {
-      case '\'':
-        return "'\\''";
-      case '\\':
-        return "'\\\\'";
-      case '\b':
-        return "'\\b'";
-      case '\f':
-        return "'\\f'";
-      case '\n': // not lineSep
-        return "'\\n'"; // not lineSep
-      case '\r':
-        return "'\\r'";
-      case '\t':
-        return "'\\t'";
-      default:
-        return "'" + c + "'";
     }
   }
 
@@ -694,12 +598,12 @@ public final class StringsPlume {
    * Remove all whitespace after instances of delimiter.
    *
    * @param arg string to remove whitespace in
-   * @param delimiter a non-empty string to remove whitespace after
+   * @param delimiter string to remove whitespace after
    * @return version of arg, with whitespace after delimiter removed
    */
   @SideEffectFree
   public static String removeWhitespaceAfter(String arg, String delimiter) {
-    if (delimiter.isEmpty()) {
+    if (delimiter == null || delimiter.equals("")) {
       throw new IllegalArgumentException("Bad delimiter: \"" + delimiter + "\"");
     }
     // String orig = arg;
@@ -728,12 +632,12 @@ public final class StringsPlume {
    * Remove all whitespace before instances of delimiter.
    *
    * @param arg string to remove whitespace in
-   * @param delimiter a non-empty string to remove whitespace before
+   * @param delimiter string to remove whitespace before
    * @return version of arg, with whitespace before delimiter removed
    */
   @SideEffectFree
   public static String removeWhitespaceBefore(String arg, String delimiter) {
-    if (delimiter.isEmpty()) {
+    if (delimiter == null || delimiter.equals("")) {
       throw new IllegalArgumentException("Bad delimiter: \"" + delimiter + "\"");
     }
     // System.out.println("removeWhitespaceBefore(\"" + arg + "\", \"" + delimiter + "\")");
@@ -838,63 +742,40 @@ public final class StringsPlume {
 
   /**
    * Same as built-in String comparison, but accept null arguments, and place them at the beginning.
-   *
-   * @deprecated use {@code Comparator.nullsFirst(Comparator.naturalOrder())}
    */
-  @Deprecated // deprecated 2021-02-27
-  public static class NullableStringComparator
-      implements Comparator<@Nullable String>, Serializable {
+  public static class NullableStringComparator implements Comparator<String>, Serializable {
     static final long serialVersionUID = 20150812L;
 
-    /**
-     * Compare two Strings lexicographically. Null is considered less than any non-null String.
-     *
-     * @param s1 first string to compare
-     * @param s2 second string to compare
-     * @return a negative integer, zero, or a positive integer as the first argument is less than,
-     *     equal to, or greater than the second
-     */
-    @SuppressWarnings("ReferenceEquality") // comparator method uses ==
     @Pure
     @Override
-    public int compare(@Nullable String s1, @Nullable String s2) {
-      if (s1 == s2) {
+    @SideEffectFree
+    public int compare(String s1, String s2) {
+      if (s1 == null && s2 == null) {
         return 0;
       }
-      if (s1 == null) {
-        return -1;
-      }
-      if (s2 == null) {
+      if (s1 == null && s2 != null) {
         return 1;
+      }
+      if (s1 != null && s2 == null) {
+        return -1;
       }
       return s1.compareTo(s2);
     }
   }
 
+  // This could test the types of the elements, and do something more sophisticated based on the
+  // types.
   /**
-   * Orders Objects according to their {@code toString()} representation. Null is considered less
-   * than any non-null Object.
+   * Attempt to order Objects. Puts null at the beginning. Returns 0 for equal elements. Otherwise,
+   * orders by the result of {@code toString()}.
    *
    * <p>Note: if toString returns a nondeterministic value, such as one that depends on the result
    * of {@code hashCode()}, then this comparator may yield different orderings from run to run of a
    * program.
-   *
-   * <p>This cannot be replaced by {@code Comparator.nullsFirst(Comparator.naturalOrder())} becase
-   * {@code Object} is not {@code Comparable}.
    */
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
     static final long serialVersionUID = 20170420L;
 
-    /**
-     * Compare two Objects based on their string representations. Null is considered less than any
-     * non-null Object.
-     *
-     * @param o1 first object to compare
-     * @param o2 second object to compare
-     * @return a negative integer, zero, or a positive integer as the first argument's {@code
-     *     toString()} representation is less than, equal to, or greater than the second argument's
-     *     {@code toString()} representation
-     */
     @SuppressWarnings({
       "allcheckers:purity.not.deterministic.call",
       "lock"
@@ -903,7 +784,7 @@ public final class StringsPlume {
     @Override
     public int compare(@Nullable Object o1, @Nullable Object o2) {
       // Make null compare smaller than anything else
-      if (o1 == o2) {
+      if ((o1 == o2)) {
         return 0;
       }
       if (o1 == null) {
@@ -927,7 +808,7 @@ public final class StringsPlume {
   ///
 
   /**
-   * Returns a ArrayList of the Strings returned by {@link
+   * Return a ArrayList of the Strings returned by {@link
    * java.util.StringTokenizer#StringTokenizer(String,String,boolean)} with the given arguments.
    *
    * <p>The static type is {@code ArrayList<Object>} because StringTokenizer extends {@code
@@ -949,7 +830,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns a ArrayList of the Strings returned by {@link
+   * Return a ArrayList of the Strings returned by {@link
    * java.util.StringTokenizer#StringTokenizer(String,String)} with the given arguments.
    *
    * @param str a string to be parsed
@@ -966,7 +847,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns a ArrayList of the Strings returned by {@link
+   * Return a ArrayList of the Strings returned by {@link
    * java.util.StringTokenizer#StringTokenizer(String)} with the given arguments.
    *
    * @param str a string to be parsed
@@ -1024,7 +905,7 @@ public final class StringsPlume {
       }
     }
     try {
-      String formatted = escapeJava(v.toString());
+      String formatted = StringsPlume.escapeJava(v.toString());
       return String.format("%s [%s]", formatted, v.getClass());
     } catch (Exception e) {
       return String.format("exception_when_calling_toString [%s]", v.getClass());
@@ -1038,7 +919,7 @@ public final class StringsPlume {
    * @return the value's toString and its class
    */
   @SideEffectFree
-  public static String listToStringAndClass(@Nullable List<?> lst) {
+  public static String listToStringAndClass(List<?> lst) {
     if (lst == null) {
       return "null";
     } else {
@@ -1058,7 +939,7 @@ public final class StringsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static String listToString(@Nullable List<?> lst) {
+  public static String listToString(List<?> lst) {
     if (lst == null) {
       return "null";
     }
@@ -1079,7 +960,7 @@ public final class StringsPlume {
    * @throws IllegalArgumentException if a is not an array
    */
   @SideEffectFree
-  public static String arrayToStringAndClass(@Nullable Object a) {
+  public static String arrayToStringAndClass(Object a) {
 
     if (a == null) {
       return "null";
@@ -1144,72 +1025,29 @@ public final class StringsPlume {
   ///
 
   /**
-   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words
-   * ending with "ch", "s", "sh", or "x", adds "ies" to words ending with "y" when the previous
-   * letter is a consonant.
+   * Return either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words ending
+   * with "ch", "s", "sh", or "x".
    *
    * @param n count of nouns
-   * @param noun word being counted; must not be the empty string
+   * @param noun word being counted
    * @return noun, if n==1; otherwise, pluralization of noun
-   * @throws IllegalArgumentException if the length of noun is 0
    */
   @SideEffectFree
   public static String nplural(int n, String noun) {
-    if (noun.isEmpty()) {
-      throw new IllegalArgumentException(
-          "The second argument to nplural must not be an empty string");
-    }
     if (n == 1) {
       return n + " " + noun;
-    }
-    char lastLetter = noun.charAt(noun.length() - 1);
-    char penultimateLetter = (noun.length() == 1) ? '\u0000' : noun.charAt(noun.length() - 2);
-    if ((penultimateLetter == 'c' && lastLetter == 'h')
-        || lastLetter == 's'
-        || (penultimateLetter == 's' && lastLetter == 'h')
-        || lastLetter == 'x') {
+    } else if (noun.endsWith("ch")
+        || noun.endsWith("s")
+        || noun.endsWith("sh")
+        || noun.endsWith("x")) {
       return n + " " + noun + "es";
+    } else {
+      return n + " " + noun + "s";
     }
-    if (lastLetter == 'y'
-        && (penultimateLetter != 'a'
-            && penultimateLetter != 'e'
-            && penultimateLetter != 'i'
-            && penultimateLetter != 'o'
-            && penultimateLetter != 'u')) {
-      return n + " " + noun.substring(0, noun.length() - 1) + "ies";
-    }
-    return n + " " + noun + "s";
   }
 
   /**
-   * Creates a conjunction or disjunction, like "a", "a or b", and "a, b, or c". Obeys the "serial
-   * comma" or "Oxford comma" rule: when the list has size 3 or larger, puts a comma after every
-   * element but the last.
-   *
-   * @param conjunction the conjunction word, like "and" or "or"
-   * @param elements the elements of the conjunction or disjunction
-   * @return a conjunction or disjunction string
-   */
-  public static String conjunction(String conjunction, List<?> elements) {
-    int size = elements.size();
-    if (size == 0) {
-      throw new IllegalArgumentException("no elements passed to conjunction()");
-    } else if (size == 1) {
-      return Objects.toString(elements.get(0));
-    } else if (size == 2) {
-      return elements.get(0) + " " + conjunction + " " + elements.get(1);
-    }
-
-    StringJoiner sj = new StringJoiner(", ");
-    for (int i = 0; i < size - 1; i++) {
-      sj.add(Objects.toString(elements.get(i)));
-    }
-    sj.add(conjunction + " " + elements.get(size - 1));
-    return sj.toString();
-  }
-
-  /**
-   * Returns the number of times the character appears in the string.
+   * Return the number of times the character appears in the string.
    *
    * @param s string to search in
    * @param ch character to search for
@@ -1228,7 +1066,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns the number of times the second string appears in the first.
+   * Return the number of times the second string appears in the first.
    *
    * @param s string to search in
    * @param sub non-empty string to search for
@@ -1316,7 +1154,7 @@ public final class StringsPlume {
     while (matcher.find()) {
       String argumentIndex = matcher.group(1);
       if (argumentIndex != null) {
-        @SuppressWarnings("lowerbound:argument") // group contains >= 2 chars
+        @SuppressWarnings("lowerbound:argument.type.incompatible") // group contains >= 2 chars
         int thisIndex = Integer.parseInt(argumentIndex.substring(0, argumentIndex.length() - 1));
         maxIndex = Math.max(maxIndex, thisIndex);
         continue;

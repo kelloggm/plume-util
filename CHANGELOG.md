@@ -1,52 +1,11 @@
 # Plume-Util change log
 
-## 1.5.3 (2021-05-04)
-
-- Fix problem with .jar file in previous release.
-
-## 1.5.2 (2021-04-28)
-
-- New methods `CollectionsPlume.mapCapacity` to compute the size for a newly-allocated map.
-- New methods `hasDuplicates` in `ArraysPlume` and `ColletionsPlume`
-- Renamed methods (the old versions still work but are deprecated):
-   - `ArraysPlume.noDuplicates(List)` to `ColletionsPlume.noDuplicates`
-- Moved methods (the old versions still work but are deprecated):
-   - `UtilPlume.intersectionCardinality` and `intersectionCardinalityAtLeast` to `CollectionsPlume`
-
-## 1.5.1 (2021-03-28)
-
-- Expand the applicability of `CollectionsPlume.mapList` and `transform`
-
-## 1.5.0 (2021-03-28)
+## 1.5.0 (forthcoming)
 
 - New methods for writing possibly-compressed files:
    - `FilesPlume.newFileOutputStream` (3 overloads)
-   - `FilesPlume.newFileWriter` (5 overloads)
-- New methods:
-   - `ArraysPlume`:
-       - `append`: creates a new array with an element added to the end
-       - `nCopies`: produces an array that is multiple copies of a value
-       - `sameContents`: tests whether two arrays are the same, setwise
-   - `CollectionsPlume`:
-       - `append`: creates a new list with an element added to the end
-       - `concatenate`: like `concat`, but always returns a new list
-       - `isSortedNoDuplicates`: tests whether a list is sorted and has no duplicates
-       - `isSorted`: tests whether a list is sorted
-       - `listOf`: like `List.of` in Java 9+
-       - `transform`: like `mapList` but with args in opposite order
-   - `StringsPlume`:
-       - `charLiteral`: to quote a character as a Java character literal
-       - `conjunction`: to produce text like "a, b, c, or d"
-   - `SystemPlume.getBooleanSystemProperty`: interpret a system property as a boolean
-   - `UtilPlume.getBooleanProperty` interpret a property as a boolean
-- Deprecated class:
-   - `StringsPlume.NullableStringComparator` (use `Comparator.nullsFirst(Comparator.naturalOrder())`)
-- Deprecated `StringsPlume.escapeJava(char)` and `StringsPlume.escapeJava(char)`;
-  use `escapeJava(String)` or `charLiteral()`
-- Renamed methods (the old versions still work but are deprecated):
-   - `UtilPlume.propertyIsTrue` to `getBooleanProperty`
-   - `CollectionsPlume.removeDuplicates` to `withoutDuplicates`
-- Moved methods (the old versions still work but are deprecated):
+   - `FilesPlume.newFileWritec` (5 overloads)
+- Moved methods (the old versions still work but are deprecated)
    - Moved file, directory, and stream methods from `UtilPlume` to new class `FilesPlume`
 
 ## 1.4.1 (2021-01-06)

@@ -36,8 +36,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 // T need not extend Comparable<T>, because a comparator can be passed in.
 @SuppressWarnings("deprecation") // an acceptable use of the Pair class
-public class OrderedPairIterator<T extends @Nullable Object>
-    implements java.util.Iterator<Pair<@Nullable T, @Nullable T>> {
+public class OrderedPairIterator<T> implements java.util.Iterator<Pair<@Nullable T, @Nullable T>> {
 
   /** The iterator for first elements of pairs. */
   Iterator<T> itor1;
@@ -100,7 +99,7 @@ public class OrderedPairIterator<T extends @Nullable Object>
     return ((next1 != null) || (next2 != null));
   }
   /**
-   * Returns an element of the first iterator, paired with null.
+   * Return an element of the first iterator, paired with null.
    *
    * @return an element of the first iterator, paired with null
    */
@@ -111,7 +110,7 @@ public class OrderedPairIterator<T extends @Nullable Object>
     return result;
   }
   /**
-   * Returns a pair of null and an element of the second iterator.
+   * Return a pair of null and an element of the second iterator.
    *
    * @return a pair of null and an element of the second iterator
    */
@@ -122,7 +121,7 @@ public class OrderedPairIterator<T extends @Nullable Object>
     return result;
   }
   /**
-   * Returns a pair containing an element from each iterator.
+   * Return a pair containing an element from each iterator.
    *
    * @return a pair containing an element from each iterator
    */
@@ -154,7 +153,7 @@ public class OrderedPairIterator<T extends @Nullable Object>
             // for now, remove the annotations.
             // @SuppressWarnings("unchecked")
             // Comparable<@NonNull T> cble1 = (Comparable<@NonNull T>) next1;
-            @SuppressWarnings({"unchecked", "nullness"})
+            @SuppressWarnings({"nullness", "unchecked"})
             Comparable<T> cble1 = (Comparable<T>) next1;
             comparison = cble1.compareTo(next2);
           } else {

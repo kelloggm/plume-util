@@ -5,7 +5,6 @@ package org.plumelib.util;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,19 +17,16 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Random;
-import java.util.RandomAccess;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.KeyFor;
-import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility functions for Collections, ArrayList, Iterator, and Map. */
@@ -49,7 +45,7 @@ public final class CollectionsPlume {
   ///
 
   /**
-   * Returns the sorted version of the list. Does not alter the list. Simply calls {@code
+   * Return the sorted version of the list. Does not alter the list. Simply calls {@code
    * Collections.sort(List<T>, Comparator<? super T>)}.
    *
    * @return a sorted version of the list
@@ -63,155 +59,19 @@ public final class CollectionsPlume {
     return result;
   }
 
+  // This should perhaps be named withoutDuplicates to emphasize that
+  // it does not side-effect its argument.
   /**
-   * Returns true iff the list does not contain duplicate elements.
-   *
-   * <p>The implementation uses O(n) time and O(n) space.
-   *
-   * @param <T> the type of the elements
-   * @param a a list
-   * @return true iff a does not contain duplicate elements
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
-  @Pure
-  public static <T> boolean hasDuplicates(List<T> a) {
-    HashSet<T> hs = new HashSet<>();
-    if (a instanceof RandomAccess) {
-      for (int i = 0; i < a.size(); i++) {
-        T elt = a.get(i);
-        if (!hs.add(elt)) {
-          return true;
-        }
-      }
-    } else {
-      for (T elt : a) {
-        if (!hs.add(elt)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Returns true iff the list does not contain duplicate elements.
-   *
-   * <p>The implementation uses O(n) time and O(n) space.
-   *
-   * @param <T> the type of the elements
-   * @param a a list
-   * @return true iff a does not contain duplicate elements
-   */
-  @Pure
-  public static <T> boolean noDuplicates(List<T> a) {
-    return !hasDuplicates(a);
-  }
-
-  /**
-   * Returns a copy of the list with duplicates removed. Retains the original order.
+   * Return a copy of the list with duplicates removed. Retains the original order.
    *
    * @param <T> type of elements of the list
    * @param l a list to remove duplicates from
    * @return a copy of the list with duplicates removed
-   * @deprecated use {@link withoutDuplicates}
    */
-  @Deprecated // 2021-03-28
   public static <T> List<T> removeDuplicates(List<T> l) {
     HashSet<T> hs = new LinkedHashSet<>(l);
     List<T> result = new ArrayList<>(hs);
     return result;
-  }
-
-  /**
-   * Returns a list with the same contents as its argument, but without duplicates. May return its
-   * argument if its argument has no duplicates, but is not guaranteed to do so.
-   *
-   * @param <T> the type of elements in {@code values}
-   * @param values a list of values
-   * @return the values, with duplicates removed
-   */
-  public static <T extends Comparable<T>> List<T> withoutDuplicates(List<T> values) {
-    // This adds O(n) time cost, and has the benefit of sometimes avoiding allocating a TreeSet.
-    if (isSortedNoDuplicates(values)) {
-      return values;
-    }
-
-    Set<T> set = new TreeSet<>(values);
-    if (values.size() == set.size()) {
-      return values;
-    } else {
-      return new ArrayList<>(set);
-    }
-  }
-
-  /**
-   * Returns true if the given list is sorted.
-   *
-   * @param <T> the component type of the list
-   * @param values a list
-   * @return true if the list is sorted
-   */
-  public static <T extends Comparable<T>> boolean isSorted(List<T> values) {
-    if (values.isEmpty() || values.size() == 1) {
-      return true;
-    }
-
-    if (values instanceof RandomAccess) {
-      // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
-      int size = values.size();
-      for (int i = 0; i < size - 1; i++) {
-        if (values.get(i).compareTo(values.get(i + 1)) > 0) {
-          return false;
-        }
-      }
-      return true;
-    } else {
-      Iterator<T> iter = values.iterator();
-      T previous = iter.next();
-      while (iter.hasNext()) {
-        T current = iter.next();
-        if (previous.compareTo(current) > 0) {
-          return false;
-        }
-        previous = current;
-      }
-      return true;
-    }
-  }
-
-  /**
-   * Returns true if the given list is sorted and has no duplicates
-   *
-   * @param <T> the component type of the list
-   * @param values a list
-   * @return true if the list is sorted and has no duplicates
-   */
-  public static <T extends Comparable<T>> boolean isSortedNoDuplicates(List<T> values) {
-    if (values.isEmpty() || values.size() == 1) {
-      return true;
-    }
-
-    if (values instanceof RandomAccess) {
-      // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
-      int size = values.size();
-      for (int i = 0; i < size - 1; i++) {
-        if (values.get(i).compareTo(values.get(i + 1)) >= 0) {
-          return false;
-        }
-      }
-      return true;
-    } else {
-      Iterator<T> iter = values.iterator();
-      T previous = iter.next();
-      while (iter.hasNext()) {
-        T current = iter.next();
-        if (previous.compareTo(current) >= 0) {
-          return false;
-        }
-        previous = current;
-      }
-      return true;
-    }
   }
 
   /** All calls to deepEquals that are currently underway. */
@@ -308,101 +168,20 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Applies the function to each element of the given iterable, producing a list of the results.
+   * Applies the function to each element of the given collection, producing a list of the results.
    *
    * <p>The point of this method is to make mapping operations more concise. Import it with
    *
    * <pre>import static org.plumelib.util.CollectionsPlume.mapList;</pre>
-   *
-   * This method is just like {@link #transform}, but with the arguments in the other order.
-   *
-   * <p>To perform replacement in place, see {@code List.replaceAll}.
-   *
-   * @param <FROM> the type of elements of the given iterable
-   * @param <TO> the type of elements of the result list
-   * @param f a function
-   * @param iterable an iterable
-   * @return a list of the results of applying {@code f} to the elements of {@code iterable}
-   */
-  public static <
-          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
-          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
-      List<TO> mapList(Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable) {
-    List<TO> result;
-
-    if (iterable instanceof RandomAccess) {
-      // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
-      List<FROM> list = (List<FROM>) iterable;
-      int size = list.size();
-      result = new ArrayList<>(size);
-      for (int i = 0; i < size; i++) {
-        result.add(f.apply(list.get(i)));
-      }
-      return result;
-    }
-
-    if (iterable instanceof Collection) {
-      result = new ArrayList<>(((Collection<?>) iterable).size());
-    } else {
-      result = new ArrayList<>(); // no information about size is available
-    }
-    for (FROM elt : iterable) {
-      result.add(f.apply(elt));
-    }
-    return result;
-  }
-
-  /**
-   * Applies the function to each element of the given array, producing a list of the results.
-   *
-   * <p>This produces a list rather than an array because it is problematic to create an array with
-   * generic compontent type.
-   *
-   * <p>The point of this method is to make mapping operations more concise. Import it with
-   *
-   * <pre>import static org.plumelib.util.CollectionsPlume.mapList;</pre>
-   *
-   * @param <FROM> the type of elements of the given array
-   * @param <TO> the type of elements of the result list
-   * @param f a function
-   * @param a an array
-   * @return a list of the results of applying {@code f} to the elements of {@code a}
-   */
-  public static <
-          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
-          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
-      List<TO> mapList(Function<? super FROM, ? extends TO> f, FROM[] a) {
-    int size = a.length;
-    List<TO> result = new ArrayList<>(size);
-    for (int i = 0; i < size; i++) {
-      result.add(f.apply(a[i]));
-    }
-    return result;
-  }
-
-  /**
-   * Applies the function to each element of the given iterable, producing a list of the results.
-   * This is just like {@link #mapList(Function, Iterable)}, but with the arguments in the opposite
-   * order.
-   *
-   * <p>The point of this method is to make mapping operations more concise. Import it with
-   *
-   * <pre>import static org.plumelib.util.CollectionsPlume.transform;</pre>
-   *
-   * This method is just like {@link #mapList}, but with the arguments in the other order. To
-   * perform replacement in place, see {@code List.replaceAll}.
    *
    * @param <FROM> the type of elements of the given collection
    * @param <TO> the type of elements of the result list
-   * @param iterable an iterable
    * @param f a function
+   * @param c a collection
    * @return a list of the results of applying {@code f} to the elements of {@code list}
    */
-  public static <
-          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
-          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
-      List<TO> transform(Iterable<FROM> iterable, Function<? super FROM, ? extends TO> f) {
-    return mapList(f, iterable);
+  public static <FROM, TO> List<TO> mapList(Function<? super FROM, TO> f, Collection<FROM> c) {
+    return c.stream().map(f).collect(Collectors.toList());
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -422,53 +201,6 @@ public final class CollectionsPlume {
     while (e.hasMoreElements()) {
       result.add(e.nextElement());
     }
-    return result;
-  }
-
-  /**
-   * Creates an immutable list containing two elements. In Java 9+, use List.of().
-   *
-   * @param <E> the List's element type
-   * @param e1 the first element
-   * @param e2 the second element
-   * @return a List containing the specified elements
-   */
-  public static <E> List<E> listOf(E e1, E e2) {
-    ArrayList<E> result = new ArrayList<>(2);
-    result.add(e1);
-    result.add(e2);
-    return Collections.unmodifiableList(result);
-  }
-
-  /**
-   * Concatenates a list and an element into a new list.
-   *
-   * @param <T> the type of the list elements
-   * @param list the list; is not modified by this method
-   * @param lastElt the new last elemeent
-   * @return a new list containing the list elements and the last element, in that order
-   */
-  @SuppressWarnings("unchecked")
-  public static <T> List<T> append(Collection<T> list, T lastElt) {
-    List<T> result = new ArrayList<>(list.size() + 1);
-    result.addAll(list);
-    result.add(lastElt);
-    return result;
-  }
-
-  /**
-   * Concatenates two lists into a new list.
-   *
-   * @param <T> the type of the list elements
-   * @param list1 the first list
-   * @param list2 the second list
-   * @return a new list containing the contents of the given lists, in order
-   */
-  @SuppressWarnings("unchecked")
-  public static <T> List<T> concatenate(Collection<T> list1, Collection<T> list2) {
-    List<T> result = new ArrayList<>(list1.size() + list2.size());
-    result.addAll(list1);
-    result.addAll(list2);
     return result;
   }
 
@@ -608,7 +340,7 @@ public final class CollectionsPlume {
       }
     }
 
-    return results;
+    return (results);
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -785,9 +517,7 @@ public final class CollectionsPlume {
 
     @Override
     public T next(@GuardSatisfied MergedIterator<T> this) {
-      if (!hasNext()) {
-        throw new NoSuchElementException();
-      }
+      hasNext(); // for side effect
       return current.next();
     }
 
@@ -798,7 +528,7 @@ public final class CollectionsPlume {
   }
 
   /** An iterator that only returns elements that match the given Filter. */
-  public static final class FilteredIterator<T extends @Nullable Object> implements Iterator<T> {
+  public static final class FilteredIterator<T> implements Iterator<T> {
     /** The iterator that this object is filtering. */
     Iterator<T> itor;
     /** The predicate that determines which elements to retain. */
@@ -908,13 +638,11 @@ public final class CollectionsPlume {
     }
 
     /**
-     * Returns the first element of the iterator that was used to construct this. This value is not
+     * Return the first element of the iterator that was used to construct this. This value is not
      * part of this iterator (unless the original iterator would have returned it multiple times).
      *
      * @return the first element of the iterator that was used to construct this
      */
-    @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // constructing an exception
-    @Pure
     public T getFirst() {
       @SuppressWarnings("interning") // check for equality to a special value
       boolean invalid = (first == nothing);
@@ -925,7 +653,7 @@ public final class CollectionsPlume {
     }
 
     /**
-     * Returns the last element of the iterator that was used to construct this. This value is not
+     * Return the last element of the iterator that was used to construct this. This value is not
      * part of this iterator (unless the original iterator would have returned it multiple times).
      *
      * <p>Throws an error unless the RemoveFirstAndLastIterator has already been iterated all the
@@ -934,7 +662,6 @@ public final class CollectionsPlume {
      * @return the last element of the iterator that was used to construct this.
      */
     // TODO: This is buggy when the delegate is empty.
-    @Pure
     public T getLast() {
       if (itor.hasNext()) {
         throw new Error();
@@ -949,7 +676,7 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Returns a List containing numElts randomly chosen elements from the iterator, or all the
+   * Return a List containing numElts randomly chosen elements from the iterator, or all the
    * elements of the iterator if there are fewer. It examines every element of the iterator, but
    * does not keep them all in memory.
    *
@@ -966,7 +693,7 @@ public final class CollectionsPlume {
   private static Random r = new Random();
 
   /**
-   * Returns a List containing numElts randomly chosen elements from the iterator, or all the
+   * Return a List containing numElts randomly chosen elements from the iterator, or all the
    * elements of the iterator if there are fewer. It examines every element of the iterator, but
    * does not keep them all in memory.
    *
@@ -1042,7 +769,12 @@ public final class CollectionsPlume {
   public static <K extends @NonNull Object> @Nullable Integer incrementMap(
       Map<K, Integer> m, K key, int count) {
     Integer old = m.get(key);
-    Integer newTotal = (old == null) ? count : old.intValue() + count;
+    Integer newTotal;
+    if (old == null) {
+      newTotal = count;
+    } else {
+      newTotal = old.intValue() + count;
+    }
     return m.put(key, newTotal);
   }
 
@@ -1115,54 +847,19 @@ public final class CollectionsPlume {
     return theKeys;
   }
 
-  /**
-   * Given an expected number of elements, returns the capacity that should be passed to a HashMap
-   * or HashSet constructor, so that the set or map will not resize.
-   *
-   * @param numElements the maximum expected number of elements in the map or set
-   * @return the initial capacity to pass to a HashMap or HashSet constructor
-   */
-  public static int mapCapacity(int numElements) {
-    // Equivalent to: (int) (numElements / 0.75) + 1
-    // where 0.75 is the default load factor.
-    return (numElements * 4 / 3) + 1;
-  }
-
-  /**
-   * Given an expected number of elements, returns the capacity that should be passed to a HashMap
-   * or HashSet constructor, so that the set or map will not resize.
-   *
-   * @param c a collection whose size is the maximum expected number of elements in the map or set
-   * @return the initial capacity to pass to a HashMap or HashSet constructor
-   */
-  public static int mapCapacity(Collection<?> c) {
-    return mapCapacity(c.size());
-  }
-
-  /**
-   * Given an expected number of elements, returns the capacity that should be passed to a HashMap
-   * or HashSet constructor, so that the set or map will not resize.
-   *
-   * @param m a map whose size is the maximum expected number of elements in the map or set
-   * @return the initial capacity to pass to a HashMap or HashSet constructor
-   */
-  public static int mapCapacity(Map<?, ?> m) {
-    return mapCapacity(m.size());
-  }
-
   ///////////////////////////////////////////////////////////////////////////
   /// Set
   ///
 
   /**
-   * Returns the object in this set that is equal to key. The Set abstraction doesn't provide this;
+   * Return the object in this set that is equal to key. The Set abstraction doesn't provide this;
    * it only provides "contains". Returns null if the argument is null, or if it isn't in the set.
    *
    * @param set a set in which to look up the value
    * @param key the value to look up in the set
    * @return the object in this set that is equal to key, or null
    */
-  public static @Nullable Object getFromSet(Set<? extends @Nullable Object> set, Object key) {
+  public static @Nullable Object getFromSet(Set<?> set, Object key) {
     if (key == null) {
       return null;
     }
@@ -1172,108 +869,5 @@ public final class CollectionsPlume {
       }
     }
     return null;
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  /// BitSet
-  ///
-
-  /**
-   * Returns true if the cardinality of the intersection of the two BitSets is at least the given
-   * value.
-   *
-   * @param a the first BitSet to intersect
-   * @param b the second BitSet to intersect
-   * @param i the cardinality bound
-   * @return true iff size(a intersect b) &ge; i
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
-  @Pure
-  public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, @NonNegative int i) {
-    // Here are three implementation strategies to determine the
-    // cardinality of the intersection:
-    // 1. a.clone().and(b).cardinality()
-    // 2. do the above, but copy only a subset of the bits initially -- enough
-    //    that it should exceed the given number -- and if that fails, do the
-    //    whole thing.  Unfortunately, bits.get(int, int) isn't optimized
-    //    for the case where the indices line up, so I'm not sure at what
-    //    point this approach begins to dominate #1.
-    // 3. iterate through both sets with nextSetBit()
-
-    int size = Math.min(a.length(), b.length());
-    if (size > 10 * i) {
-      // The size is more than 10 times the limit.  So first try processing
-      // just a subset of the bits (4 times the limit).
-      BitSet intersection = a.get(0, 4 * i);
-      intersection.and(b);
-      if (intersection.cardinality() >= i) {
-        return true;
-      }
-    }
-    return (intersectionCardinality(a, b) >= i);
-  }
-
-  /**
-   * Returns true if the cardinality of the intersection of the three BitSets is at least the given
-   * value.
-   *
-   * @param a the first BitSet to intersect
-   * @param b the second BitSet to intersect
-   * @param c the third BitSet to intersect
-   * @param i the cardinality bound
-   * @return true iff size(a intersect b intersect c) &ge; i
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
-  @Pure
-  public static boolean intersectionCardinalityAtLeast(
-      BitSet a, BitSet b, BitSet c, @NonNegative int i) {
-    // See comments in intersectionCardinalityAtLeast(BitSet, BitSet, int).
-    // This is a copy of that.
-
-    int size = Math.min(a.length(), b.length());
-    size = Math.min(size, c.length());
-    if (size > 10 * i) {
-      // The size is more than 10 times the limit.  So first try processing
-      // just a subset of the bits (4 times the limit).
-      BitSet intersection = a.get(0, 4 * i);
-      intersection.and(b);
-      intersection.and(c);
-      if (intersection.cardinality() >= i) {
-        return true;
-      }
-    }
-    return (intersectionCardinality(a, b, c) >= i);
-  }
-
-  /**
-   * Returns the cardinality of the intersection of the two BitSets.
-   *
-   * @param a the first BitSet to intersect
-   * @param b the second BitSet to intersect
-   * @return size(a intersect b)
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
-  @Pure
-  public static int intersectionCardinality(BitSet a, BitSet b) {
-    BitSet intersection = (BitSet) a.clone();
-    intersection.and(b);
-    return intersection.cardinality();
-  }
-
-  /**
-   * Returns the cardinality of the intersection of the three BitSets.
-   *
-   * @param a the first BitSet to intersect
-   * @param b the second BitSet to intersect
-   * @param c the third BitSet to intersect
-   * @return size(a intersect b intersect c)
-   */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
-  @Pure
-  public static int intersectionCardinality(BitSet a, BitSet b, BitSet c) {
-    BitSet intersection = (BitSet) a.clone();
-    intersection.and(b);
-    intersection.and(c);
-    return intersection.cardinality();
   }
 }

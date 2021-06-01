@@ -68,7 +68,7 @@ import org.checkerframework.checker.regex.qual.Regex;
  *
  * @see #getEntry() and @see #setEntryStartStop(String,String)
  */
-@SuppressWarnings({"IterableAndIterator"})
+@SuppressWarnings("IterableAndIterator")
 public class EntryReader extends LineNumberReader implements Iterable<String>, Iterator<String> {
 
   ///
@@ -181,7 +181,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     /**
-     * Returns a substring of the entry body that matches the specified regular expression. If no
+     * Return a substring of the entry body that matches the specified regular expression. If no
      * match is found, returns the firstLine.
      *
      * @param re regex to match
@@ -583,7 +583,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Returns a line-by-line iterator for this file.
+   * Return a line-by-line iterator for this file.
    *
    * <p><b>Warning:</b> This does not return a fresh iterator each time. The iterator is a
    * singleton, the same one is returned each time, and a new one can never be created after it is
@@ -592,7 +592,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @return a line-by-line iterator for this file
    */
   @Override
-  public Iterator<String> iterator(EntryReader this) {
+  public Iterator<String> iterator() {
     return this;
   }
 
@@ -628,7 +628,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Returns the next line in the multi-file.
+   * Return the next line in the multi-file.
    *
    * @return the next line in the multi-file
    * @throws NoSuchElementException at end of file
@@ -785,7 +785,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Returns the current line number in the current file.
+   * Return the current line number in the current file.
    *
    * @return the current line number
    */
