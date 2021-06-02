@@ -1,5 +1,7 @@
 package org.plumelib.util;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -45,7 +47,7 @@ import java.util.Random;
  *
  * @param <T> the type of elements being selected over
  */
-public class RandomSelector<T> {
+public class RandomSelector<T extends @Nullable Object> {
 
   // Rep Invariant: values != null && values.size() <= numElts &&
   //                ((numElts == -1 && coinTossMode == true) ||

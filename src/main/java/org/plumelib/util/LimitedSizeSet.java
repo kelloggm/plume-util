@@ -24,7 +24,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  *
  * @param <T> the type of elements in the set
  */
-public class LimitedSizeSet<T> implements Serializable, Cloneable {
+public class LimitedSizeSet<T extends @Nullable Object> implements Serializable, Cloneable {
   // We are Serializable, so we specify a version to allow changes to
   // method signatures without breaking serialization.  If you add or
   // remove fields, you should change this number to the current date.
@@ -228,7 +228,7 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
    * @param slist a list of LimitedSizeSet, whose elements will be merged
    * @return a LimitedSizeSet that merges the elements of slist
    */
-  public static <T> LimitedSizeSet<T> merge(
+  public static <T extends @Nullable Object> LimitedSizeSet<T> merge(
       @Positive int maxValues, List<LimitedSizeSet<? extends T>> slist) {
     LimitedSizeSet<T> result = new LimitedSizeSet<>(maxValues);
     for (LimitedSizeSet<? extends T> s : slist) {

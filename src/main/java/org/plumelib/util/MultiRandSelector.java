@@ -1,5 +1,7 @@
 package org.plumelib.util;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,7 +27,7 @@ import java.util.Random;
  * @param <T> the type of elements to be selected among
  * @see RandomSelector
  */
-public class MultiRandSelector<T> {
+public class MultiRandSelector<T extends @Nullable Object> {
 
   /** Whether to toss a coin or select a given number of elements. */
   private boolean coinTossMode;

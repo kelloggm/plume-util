@@ -528,7 +528,7 @@ public final class CollectionsPlume {
   }
 
   /** An iterator that only returns elements that match the given Filter. */
-  public static final class FilteredIterator<T> implements Iterator<T> {
+  public static final class FilteredIterator<T extends @Nullable Object> implements Iterator<T> {
     /** The iterator that this object is filtering. */
     Iterator<T> itor;
     /** The predicate that determines which elements to retain. */
@@ -685,7 +685,7 @@ public final class CollectionsPlume {
    * @param numElts number of elements to select
    * @return list of numElts elements from itor
    */
-  public static <T> List<T> randomElements(Iterator<T> itor, int numElts) {
+  public static <T extends @Nullable Object> List<T> randomElements(Iterator<T> itor, int numElts) {
     return randomElements(itor, numElts, r);
   }
 
@@ -703,7 +703,7 @@ public final class CollectionsPlume {
    * @param random the Random instance to use to make selections
    * @return list of numElts elements from itor
    */
-  public static <T> List<T> randomElements(Iterator<T> itor, int numElts, Random random) {
+  public static <T extends @Nullable Object> List<T> randomElements(Iterator<T> itor, int numElts, Random random) {
     // The elements are chosen with the following probabilities,
     // where n == numElts:
     //   n n/2 n/3 n/4 n/5 ...
@@ -859,7 +859,7 @@ public final class CollectionsPlume {
    * @param key the value to look up in the set
    * @return the object in this set that is equal to key, or null
    */
-  public static @Nullable Object getFromSet(Set<?> set, Object key) {
+  public static @Nullable Object getFromSet(Set<? extends @Nullable Object> set, Object key) {
     if (key == null) {
       return null;
     }
