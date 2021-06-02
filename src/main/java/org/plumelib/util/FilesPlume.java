@@ -65,6 +65,7 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   public static InputStream newFileInputStream(Path path) throws IOException {
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: fixed by https://github.com/plume-lib/plume-util/commit/8150b0652f500a56a963b0519e2798cf5c143f20
     FileInputStream fis = new FileInputStream(path.toFile());
     InputStream in;
     if (path.endsWith(".gz")) {
@@ -345,6 +346,7 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   public static OutputStream newFileOutputStream(Path path, boolean append) throws IOException {
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: fixed by https://github.com/plume-lib/plume-util/commit/8150b0652f500a56a963b0519e2798cf5c143f20
     FileOutputStream fis = new FileOutputStream(path.toFile(), append);
     OutputStream in;
     if (path.endsWith(".gz")) {
@@ -871,7 +873,9 @@ public final class FilesPlume {
    * @throws IOException if there is trouble writing the file
    */
   public static void writeObject(Object o, File file) throws IOException {
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: fixed by https://github.com/plume-lib/plume-util/commit/8150b0652f500a56a963b0519e2798cf5c143f20
     OutputStream bytes = newBufferedFileOutputStream(file.toString(), false);
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: fixed by https://github.com/plume-lib/plume-util/commit/8150b0652f500a56a963b0519e2798cf5c143f20
     ObjectOutputStream objs = new ObjectOutputStream(bytes);
     objs.writeObject(o);
     objs.close();
@@ -889,9 +893,11 @@ public final class FilesPlume {
    */
   @SuppressWarnings("BanSerializableRead") // wrapper around dangerous API
   public static Object readObject(File file) throws IOException, ClassNotFoundException {
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: fixed by https://github.com/plume-lib/plume-util/commit/8150b0652f500a56a963b0519e2798cf5c143f20
     InputStream fis = newFileInputStream(file);
     // 8192 is the buffer size in BufferedReader
     InputStream istream = new BufferedInputStream(fis, 8192);
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: fixed by https://github.com/plume-lib/plume-util/commit/8150b0652f500a56a963b0519e2798cf5c143f20
     ObjectInputStream objs = new ObjectInputStream(istream);
     return objs.readObject();
   }
@@ -931,6 +937,7 @@ public final class FilesPlume {
   public static String readFile(File file) {
 
     try {
+      @SuppressWarnings("objectconstruction:required.method.not.called") // TP: fixed by https://github.com/plume-lib/plume-util/commit/8150b0652f500a56a963b0519e2798cf5c143f20
       BufferedReader reader = newBufferedFileReader(file);
       StringBuilder contents = new StringBuilder();
       String line = reader.readLine();
@@ -958,6 +965,7 @@ public final class FilesPlume {
   public static void writeFile(File file, String contents) {
 
     try {
+      @SuppressWarnings("objectconstruction:required.method.not.called") // TP: fixed by https://github.com/plume-lib/plume-util/commit/8150b0652f500a56a963b0519e2798cf5c143f20
       Writer writer = Files.newBufferedWriter(file.toPath(), UTF_8);
       writer.write(contents, 0, contents.length());
       writer.close();
