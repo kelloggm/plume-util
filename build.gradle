@@ -87,6 +87,7 @@ checkerFramework {
     '-AcheckPurityAnnotations',
     '-ArequirePrefixInWarningSuppressions',
     '-AwarnUnneededSuppressions',
+    '-AcountMustCall'
   ]
 }
 
