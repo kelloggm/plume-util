@@ -595,7 +595,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @return a line-by-line iterator for this file
    */
-  @SuppressWarnings("mustcall:override.return") // FP `Iterable.iterator()` returns @MustCall (validated)
+  @SuppressWarnings("mustcall:override.return") // FP container of owners: `Iterable.iterator()` returns @MustCall (validated)
   @Override
   public @MustCallAlias Iterator<String> iterator(@MustCallAlias EntryReader this) {
     return this;
