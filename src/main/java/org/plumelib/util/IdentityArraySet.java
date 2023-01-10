@@ -36,7 +36,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "lock", // not yet annotated for the Lock Checker
   "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
-public class IdentityArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E> {
+public class IdentityArraySet<E extends Object> extends AbstractSet<E> {
 
   /** The values. Null if capacity=0. */
   private @Nullable E[] values;
@@ -64,7 +64,6 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     "allcheckers:purity.not.sideeffectfree.assign.field", // initializes `this`
     "allcheckers:purity.not.sideeffectfree.call" // calls `super`
   })
-  @SideEffectFree
   public IdentityArraySet(int initialCapacity) {
     if (initialCapacity < 0)
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
@@ -76,7 +75,6 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   }
 
   /** Constructs an empty {@code IdentityArraySet} with the default initial capacity. */
-  @SideEffectFree
   public IdentityArraySet() {
     this(4);
   }
@@ -93,7 +91,6 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     "allcheckers:purity.not.sideeffectfree.assign.field", // initializes `this`
     "allcheckers:purity.not.sideeffectfree.call" // calls `super`
   })
-  @SideEffectFree
   private IdentityArraySet(E[] values, @LTEqLengthOf({"values"}) int size) {
     this.values = values;
     this.size = size;
@@ -111,7 +108,6 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     "nullness:method.invocation", // inference failure;
     // https://github.com/typetools/checker-framework/issues/979 ?
   })
-  @SideEffectFree
   public IdentityArraySet(Collection<? extends E> m) {
     this(m.size());
     addAll(m);
@@ -172,13 +168,11 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
   // Query Operations
 
-  @Pure
   @Override
   public @NonNegative int size() {
     return size;
   }
 
-  @Pure
   @Override
   public boolean isEmpty() {
     return size == 0;
@@ -192,8 +186,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * @return the index of the given value, or -1 if it does not appear
    */
   @SuppressWarnings("interning:not.interned") // object identity comparison
-  @Pure
-  private int indexOf(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+  private int indexOf(@GuardSatisfied @Nullable Object value) {
     if (values == null) {
       return -1;
     }
@@ -205,9 +198,8 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     return -1;
   }
 
-  @Pure
   @Override
-  public boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+  public boolean contains(@GuardSatisfied @Nullable Object value) {
     return indexOf(value) != -1;
   }
 
@@ -220,7 +212,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   }
 
   @Override
-  public boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+  public boolean remove(@GuardSatisfied @Nullable Object value) {
     int index = indexOf(value);
     return removeIndex(index);
   }
@@ -273,7 +265,6 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
     /** Creates a new ArraySetIterator. */
     @SuppressWarnings("allcheckers:purity") // initializes `this`
-    @SideEffectFree
     ArraySetIterator() {
       index = 0;
       removed = true; // can't remove until next() has been called
@@ -285,7 +276,6 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
      *
      * @return true if this has another element
      */
-    @Pure
     @Override
     public final boolean hasNext() {
       return index < size();
@@ -353,7 +343,6 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * @return a copy of this
    */
   @SuppressWarnings("unchecked")
-  @SideEffectFree
   @Override
   public IdentityArraySet<E> clone() {
     return new IdentityArraySet<E>(Arrays.copyOf(values, size), size);
@@ -364,7 +353,6 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    *
    * @return the internal representation, printed
    */
-  @SideEffectFree
   /* package-private */ String repr() {
     return String.format(
         "size=%d capacity=%s %s",

@@ -72,7 +72,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "lock", // not yet annotated for the Lock Checker
   "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
-public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSignedness Object>
+public class ArrayMap<K extends Object, V extends Object>
     extends AbstractMap<K, V> {
 
   // An alternate internal representation would be a list of Map.Entry objects (e.g.,
@@ -107,7 +107,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     "samelen:assignment", // initialization
     "allcheckers:purity.not.sideeffectfree.assign.field" // initializes `this`
   })
-  @SideEffectFree
   public ArrayMap(int initialCapacity) {
     if (initialCapacity < 0)
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
@@ -121,7 +120,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** Constructs an empty {@code ArrayMap} with the default initial capacity. */
-  @SideEffectFree
   public ArrayMap() {
     this(4);
   }
@@ -138,7 +136,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     "samelen:assignment", // initialization
     "allcheckers:purity.not.sideeffectfree.assign.field" // initializes `this`
   })
-  @SideEffectFree
   private ArrayMap(
       K @SameLen("values") [] keys,
       V @SameLen("keys") [] values,
@@ -160,7 +157,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     "nullness:method.invocation", // inference failure;
     // https://github.com/typetools/checker-framework/issues/979 ?
   })
-  @SideEffectFree
   public ArrayMap(Map<? extends K, ? extends V> m) {
     this(m.size());
     putAll(m);
@@ -299,13 +295,11 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   // Query Operations
 
-  @Pure
   @Override
   public @NonNegative int size() {
     return size;
   }
 
-  @Pure
   @Override
   public boolean isEmpty() {
     return size == 0;
@@ -318,8 +312,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @param key a key to find
    * @return the index of the given key, or -1 if it does not appear
    */
-  @Pure
-  private int indexOfKey(@GuardSatisfied @Nullable @UnknownSignedness Object key) {
+  private int indexOfKey(@GuardSatisfied @Nullable Object key) {
     if (keys == null) {
       return -1;
     }
@@ -338,8 +331,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @param value a value to find
    * @return the index of the given value, or -1 if it does not appear
    */
-  @Pure
-  private int indexOfValue(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+  private int indexOfValue(@GuardSatisfied @Nullable Object value) {
     if (keys == null) {
       return -1;
     }
@@ -351,16 +343,14 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     return -1;
   }
 
-  @Pure
   @Override
   @SuppressWarnings("keyfor:contracts.conditional.postcondition") // delegate test to `keys` field
-  public boolean containsKey(@GuardSatisfied @Nullable @UnknownSignedness Object key) {
+  public boolean containsKey(@GuardSatisfied @Nullable Object key) {
     return indexOfKey(key) != -1;
   }
 
-  @Pure
   @Override
-  public boolean containsValue(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+  public boolean containsValue(@GuardSatisfied @Nullable Object value) {
     return indexOfValue(value) != -1;
   }
 
@@ -371,17 +361,15 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @param value the value
    * @return true if this map contains the given mapping
    */
-  @Pure
   private boolean containsEntry(
-      @GuardSatisfied @Nullable @UnknownSignedness Object key,
-      @GuardSatisfied @Nullable @UnknownSignedness Object value) {
+      @GuardSatisfied @Nullable Object key,
+      @GuardSatisfied @Nullable Object value) {
     int index = indexOfKey(key);
     return index != -1 && Objects.equals(value, values[index]);
   }
 
-  @Pure
   @Override
-  public @Nullable V get(@GuardSatisfied @Nullable @UnknownSignedness Object key) {
+  public @Nullable V get(@GuardSatisfied @Nullable Object key) {
     int index = indexOfKey(key);
     return getOrNull(index);
   }
@@ -392,7 +380,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @param index the index
    * @return the value at the given index, or null if the index is -1
    */
-  @Pure
   private @Nullable V getOrNull(@GTENegativeOne int index) {
     return (index == -1) ? null : values[index];
   }
@@ -408,7 +395,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   @Override
-  public @Nullable V remove(@GuardSatisfied @Nullable @UnknownSignedness Object key) {
+  public @Nullable V remove(@GuardSatisfied @Nullable Object key) {
     int index = indexOfKey(key);
     // cannot use removeIndex because it has the wrong return type
     if (index == -1) {
@@ -446,7 +433,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   // Behavior is undefined if the map is changed while the sets are being iterated through, so these
   // implementations can assume there are no concurrent side effects.
-  @Pure
   @SuppressWarnings("allcheckers:purity") // update cache
   @Override
   public Set<@KeyFor("this") K> keySet() {
@@ -462,7 +448,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     /** Creates a new KeySet. */
     public KeySet() {}
 
-    @Pure
     @Override
     public final @NonNegative int size() {
       return ArrayMap.this.size();
@@ -478,31 +463,28 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return new KeyIterator();
     }
 
-    @Pure
     @Override
-    public final boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
+    public final boolean contains(@GuardSatisfied @Nullable Object o) {
       return containsKey(o);
     }
 
     @Override
-    public final boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
+    public final boolean remove(@GuardSatisfied @Nullable Object o) {
       int index = indexOfKey(o);
       return removeIndex(index);
     }
 
     @SuppressWarnings({"nullness:return"}) // array isn't padded with null, before index `size`
-    @SideEffectFree
     @Override
-    public @PolySigned Object[] toArray() {
+    public Object[] toArray() {
       // toArray must return a new array because clients are permitted to modify it.
-      return (@PolySigned Object[]) Arrays.copyOf(keys, size);
+      return (Object[]) Arrays.copyOf(keys, size);
     }
 
     @SuppressWarnings({
       "unchecked", // generic array cast
       "nullness" // Nullness Checker special-cases toArray
     })
-    @SideEffectFree
     @Override
     public <T> @Nullable T[] toArray(@PolyNull T[] a) {
       T[] result;
@@ -534,7 +516,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   /** The view of the values. */
   @MonotonicNonNull Collection<V> valuesCollection = null;
 
-  @Pure
   @SuppressWarnings("allcheckers:purity")
   @Override
   public Collection<V> values() {
@@ -550,7 +531,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     /** Creates a new Values. */
     public Values() {}
 
-    @Pure
     @Override
     public final @NonNegative int size() {
       return ArrayMap.this.size();
@@ -566,25 +546,22 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return new ValueIterator();
     }
 
-    @Pure
     @Override
-    public final boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
+    public final boolean contains(@GuardSatisfied @Nullable Object o) {
       return containsValue(o);
     }
 
     @SuppressWarnings({"nullness:override.return"}) // polymorphism problem
-    @SideEffectFree
     @Override
-    public @Nullable @PolySigned Object[] toArray() {
+    public @Nullable Object[] toArray() {
       // toArray must return a new array because clients are permitted to modify it.
-      return (@Nullable @PolySigned Object[]) Arrays.copyOf(values, size);
+      return (@Nullable Object[]) Arrays.copyOf(values, size);
     }
 
     @SuppressWarnings({
       "unchecked", // generic array cast
       "nullness" // Nullness Checker special-cases toArray
     })
-    @SideEffectFree
     @Override
     public <T> @Nullable T[] toArray(@PolyNull T[] a) {
       T[] result;
@@ -616,7 +593,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @MonotonicNonNull Set<Map.Entry<@KeyFor("this") K, V>> entrySet = null;
 
   @SuppressWarnings("allcheckers:purity")
-  @Pure
   @Override
   public Set<Map.Entry<@KeyFor("this") K, V>> entrySet() {
     if (entrySet == null) {
@@ -631,7 +607,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     /** Creates a new EntrySet. */
     public EntrySet() {}
 
-    @Pure
     @Override
     public final @NonNegative int size() {
       return ArrayMap.this.size();
@@ -647,9 +622,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return new EntryIterator();
     }
 
-    @Pure
     @Override
-    public final boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
+    public final boolean contains(@GuardSatisfied @Nullable Object o) {
       if (!(o instanceof Map.Entry)) {
         return false;
       }
@@ -660,7 +634,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     }
 
     @Override
-    public final boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
+    public final boolean remove(@GuardSatisfied @Nullable Object o) {
       if (o instanceof Map.Entry) {
         Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
         Object key = e.getKey();
@@ -703,7 +677,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     /** Creates a new ArrayMapIterator. */
     @SuppressWarnings("allcheckers:purity") // initializes `this`
-    @SideEffectFree
     ArrayMapIterator() {
       index = 0;
       removed = true; // can't remove until next() has been called
@@ -715,7 +688,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
      *
      * @return true if this has another element
      */
-    @Pure
     public final boolean hasNext() {
       return index < size();
     }
@@ -742,7 +714,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   /** An iterator over the keys. */
   final class KeyIterator extends ArrayMapIterator implements Iterator<@KeyFor("this") K> {
     /** Creates a new KeyIterator. */
-    @SideEffectFree
     KeyIterator() {}
 
     @Override
@@ -758,7 +729,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   /** An iterator over the values. */
   final class ValueIterator extends ArrayMapIterator implements Iterator<V> {
     /** Creates a new ValueIterator. */
-    @SideEffectFree
     ValueIterator() {}
 
     @Override
@@ -774,7 +744,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   /** An iterator over the entries. */
   final class EntryIterator extends ArrayMapIterator implements Iterator<Map.Entry<K, V>> {
     /** Creates a new EntryIterator. */
-    @SideEffectFree
     EntryIterator() {}
 
     @Override
@@ -812,18 +781,15 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
      * @param index the index
      */
     @SuppressWarnings("allcheckers:purity") // initializes `this`
-    @Pure
     public Entry(@NonNegative int index) {
       this.index = index;
     }
 
-    @Pure
     @Override
     public K getKey() {
       return keys[index];
     }
 
-    @Pure
     @Override
     public V getValue() {
       return values[index];
@@ -840,15 +806,13 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
      *
      * @return the ArrayMap associated with this entry
      */
-    @Pure
     private ArrayMap<K, V> theArrayMap() {
       return ArrayMap.this;
     }
 
     // Per the specification of Map.Entry, this does not compare the underlying list and index.
-    @Pure
     @Override
-    public boolean equals(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
+    public boolean equals(@GuardSatisfied @Nullable Object o) {
       if (this == o) {
         return true;
       }
@@ -872,7 +836,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return false;
     }
 
-    @Pure
     @Override
     public int hashCode() {
       return Objects.hash(getKey(), getValue());
@@ -885,9 +848,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   // Defaultable methods
 
-  @SideEffectFree
   @Override
-  public V getOrDefault(@GuardSatisfied @Nullable @UnknownSignedness Object key, V defaultValue) {
+  public V getOrDefault(@GuardSatisfied @Nullable Object key, V defaultValue) {
     int index = indexOfKey(key);
     if (index != -1) {
       return values[index];
@@ -963,8 +925,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   @Override
   public boolean remove(
-      @GuardSatisfied @Nullable @UnknownSignedness Object key,
-      @GuardSatisfied @Nullable @UnknownSignedness Object value) {
+      @GuardSatisfied @Nullable Object key,
+      @GuardSatisfied @Nullable Object value) {
     int index = indexOfKey(key);
     if (index == -1) {
       return false;
@@ -1112,7 +1074,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @return a copy of this
    */
   @SuppressWarnings("unchecked")
-  @SideEffectFree
   @Override
   public ArrayMap<K, V> clone() {
     return new ArrayMap<K, V>(Arrays.copyOf(keys, size), Arrays.copyOf(values, size), size);
@@ -1123,7 +1084,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    *
    * @return the internal representation, printed
    */
-  @SideEffectFree
   /* package-private */ String repr() {
     return String.format(
         "size=%d capacity=%d %s %s",

@@ -34,7 +34,7 @@ public final class MostlySingletonSet<T extends Object> extends AbstractMostlySi
     "fallthrough",
     "lock:method.invocation" // #979?
   })
-  public boolean add(@GuardSatisfied MostlySingletonSet<T> this, T e) {
+  public boolean add(MostlySingletonSet<T> this, T e) {
     switch (state) {
       case EMPTY:
         state = State.SINGLETON;
@@ -66,7 +66,7 @@ public final class MostlySingletonSet<T extends Object> extends AbstractMostlySi
 
   @Override
   public boolean contains(
-      @GuardSatisfied MostlySingletonSet<T> this, @GuardSatisfied @UnknownSignedness Object o) {
+      MostlySingletonSet<T> this, Object o) {
     switch (state) {
       case EMPTY:
         return false;

@@ -56,7 +56,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "lock", // not yet annotated for the Lock Checker
   "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
-public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E> {
+public class ArraySet<E extends Object> extends AbstractSet<E> {
 
   /** The values. Null if capacity=0. */
   private @Nullable E[] values;
@@ -84,7 +84,6 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     "allcheckers:purity.not.sideeffectfree.assign.field", // initializes `this`
     "allcheckers:purity.not.sideeffectfree.call" // calls `super`
   })
-  @SideEffectFree
   public ArraySet(int initialCapacity) {
     if (initialCapacity < 0)
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
@@ -96,7 +95,6 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   }
 
   /** Constructs an empty {@code ArraySet} with the default initial capacity. */
-  @SideEffectFree
   public ArraySet() {
     this(4);
   }
@@ -113,7 +111,6 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     "allcheckers:purity.not.sideeffectfree.assign.field", // initializes `this`
     "allcheckers:purity.not.sideeffectfree.call" // calls `super`
   })
-  @SideEffectFree
   private ArraySet(E[] values, @LTEqLengthOf({"values"}) int size) {
     this.values = values;
     this.size = size;
@@ -131,7 +128,6 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     "nullness:method.invocation", // inference failure;
     // https://github.com/typetools/checker-framework/issues/979 ?
   })
-  @SideEffectFree
   public ArraySet(Collection<? extends E> m) {
     this(m.size());
     addAll(m);
@@ -258,13 +254,11 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
 
   // Query Operations
 
-  @Pure
   @Override
   public @NonNegative int size() {
     return size;
   }
 
-  @Pure
   @Override
   public boolean isEmpty() {
     return size == 0;
@@ -277,8 +271,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    * @param value a value to find
    * @return the index of the given value, or -1 if it does not appear
    */
-  @Pure
-  private int indexOf(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+  private int indexOf(@GuardSatisfied @Nullable Object value) {
     if (values == null) {
       return -1;
     }
@@ -290,9 +283,8 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     return -1;
   }
 
-  @Pure
   @Override
-  public boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+  public boolean contains(@GuardSatisfied @Nullable Object value) {
     return indexOf(value) != -1;
   }
 
@@ -305,7 +297,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   }
 
   @Override
-  public boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+  public boolean remove(@GuardSatisfied @Nullable Object value) {
     int index = indexOf(value);
     return removeIndex(index);
   }
@@ -358,7 +350,6 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
 
     /** Creates a new ArraySetIterator. */
     @SuppressWarnings("allcheckers:purity") // initializes `this`
-    @SideEffectFree
     ArraySetIterator() {
       index = 0;
       removed = true; // can't remove until next() has been called
@@ -370,7 +361,6 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
      *
      * @return true if this has another element
      */
-    @Pure
     @Override
     public final boolean hasNext() {
       return index < size();
@@ -438,7 +428,6 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    * @return a copy of this
    */
   @SuppressWarnings("unchecked")
-  @SideEffectFree
   @Override
   public ArraySet<E> clone() {
     return new ArraySet<E>(Arrays.copyOf(values, size), size);
@@ -449,7 +438,6 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    *
    * @return the internal representation, printed
    */
-  @SideEffectFree
   /* package-private */ String repr() {
     return String.format(
         "size=%d capacity=%s %s",

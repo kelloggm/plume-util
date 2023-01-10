@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 public final class LimitedSizeSetTest {
 
   // Add 100 elements randomly selected from the range 0..limit-1 to the set.
-  private static void lsisAddElts(@Positive int limit, LimitedSizeSet<Integer> s) {
+  private static void lsisAddElts(int limit, LimitedSizeSet<Integer> s) {
     Random r = new Random(20140613);
     for (int i = 0; i < 100; i++) {
       s.add(r.nextInt(limit));
@@ -22,7 +22,7 @@ public final class LimitedSizeSetTest {
   }
 
   // Create a LimitedSizeSet of the given size, and add elements to it.
-  private static void lsis_test(@Positive int maxSize) {
+  private static void lsis_test(int maxSize) {
     LimitedSizeSet<Integer> s = new LimitedSizeSet<>(maxSize);
     for (int i = 1; i < 2 * maxSize; i++) {
       lsisAddElts(i, s);
@@ -35,7 +35,7 @@ public final class LimitedSizeSetTest {
   }
 
   private static void lss_withNull_test() {
-    LimitedSizeSet<@Nullable Integer> s = new LimitedSizeSet<>(10);
+    LimitedSizeSet<Integer> s = new LimitedSizeSet<>(10);
     s.add(1);
     s.add(2);
     s.add(null);
@@ -49,7 +49,6 @@ public final class LimitedSizeSetTest {
     assertTrue(s.contains(3));
   }
 
-  @Test
   public void testLimitedSizeSet() {
     for (int i = 1; i < 10; i++) {
       lsis_test(i);

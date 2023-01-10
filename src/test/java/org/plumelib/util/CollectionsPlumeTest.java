@@ -90,12 +90,12 @@ public final class CollectionsPlumeTest {
     }
 
     @Override
-    public boolean hasNext(@GuardSatisfied IotaIterator this) {
+    public boolean hasNext(IotaIterator this) {
       return i < limit;
     }
 
     @Override
-    public Integer next(@GuardSatisfied IotaIterator this) {
+    public Integer next(IotaIterator this) {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
@@ -103,7 +103,7 @@ public final class CollectionsPlumeTest {
     }
 
     @Override
-    public void remove(@GuardSatisfied IotaIterator this) {
+    public void remove(IotaIterator this) {
       throw new UnsupportedOperationException();
     }
   }
@@ -112,18 +112,15 @@ public final class CollectionsPlumeTest {
   /// The tests themselves
   ///
 
-  @Test
   public void testListOf() {
     assertEquals(Arrays.asList("a", "b"), CollectionsPlume.listOf("a", "b"));
   }
 
-  @Test
   public void testAppend() {
     assertEquals(
         Arrays.asList("a", "b", "c"), CollectionsPlume.append(Arrays.asList("a", "b"), "c"));
   }
 
-  @Test
   public void testMergedIterator() {
 
     // public static class EnumerationIterator implements Iterator
@@ -174,7 +171,6 @@ public final class CollectionsPlumeTest {
         toArrayList(new CollectionsPlume.MergedIterator<Integer>(iota10IteratorTwice3.iterator())));
   }
 
-  @Test
   public void testFilteredIterator() {
 
     // public static final class FilteredIterator implements Iterator
@@ -190,7 +186,6 @@ public final class CollectionsPlumeTest {
             new CollectionsPlume.FilteredIterator<Integer>(iota10.iterator(), new OddFilter())));
   }
 
-  @Test
   public void testRemoveFirstAndLastIterator() {
 
     List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
@@ -203,7 +198,6 @@ public final class CollectionsPlumeTest {
     assertTrue(rfali.getLast().equals(4));
   }
 
-  @Test
   public void testRandomElements() {
 
     // Tests CollectionsPlume.randomElements(...)
@@ -240,7 +234,7 @@ public final class CollectionsPlumeTest {
         }) // The IotaIterator only contains indexes for totals.length, and since chosen's
         // elements are selected randomly from the IotaIterator, all of its elements are
         // @IndexFor
-        List<@IndexFor("totals") Integer> chosen =
+        List<Integer> chosen =
             CollectionsPlume.randomElements(new IotaIterator(itorSize), i, r);
         for (int m = 0; m < chosen.size(); m++) {
           for (int n = m + 1; n < chosen.size(); n++) {
@@ -286,7 +280,6 @@ public final class CollectionsPlumeTest {
   List<Object> lo1233 = Arrays.asList(object1, object2, object3, object3);
 
   @SuppressWarnings("JdkObsolete") // test of List that does not implement RandomAccess
-  @Test
   public void test_hasDuplicates() {
     assertFalse(CollectionsPlume.hasDuplicates(l123));
     assertTrue(CollectionsPlume.hasDuplicates(l123123));
@@ -302,7 +295,6 @@ public final class CollectionsPlumeTest {
   }
 
   @SuppressWarnings("ArrayEquals")
-  @Test
   public void test_withoutDuplicates() {
 
     // public static List sortList (List l, Comparator c)
@@ -322,7 +314,6 @@ public final class CollectionsPlumeTest {
   }
 
   @SuppressWarnings("ArrayEquals")
-  @Test
   public void test_withoutDuplicatesComparable() {
 
     // public static List sortList (List l, Comparator c)
@@ -335,7 +326,6 @@ public final class CollectionsPlumeTest {
     assertEquals(l123, CollectionsPlume.withoutDuplicatesComparable(l1233));
   }
 
-  @Test
   public void testIsSorted() {
     assertTrue(CollectionsPlume.isSorted(l123));
     assertFalse(CollectionsPlume.isSorted(l123123));
@@ -344,7 +334,6 @@ public final class CollectionsPlumeTest {
     assertTrue(CollectionsPlume.isSorted(l1233));
   }
 
-  @Test
   public void testIsSortedNoDuplicates() {
     assertTrue(CollectionsPlume.isSortedNoDuplicates(l123));
     assertFalse(CollectionsPlume.isSortedNoDuplicates(l123123));
@@ -353,7 +342,6 @@ public final class CollectionsPlumeTest {
     assertFalse(CollectionsPlume.isSortedNoDuplicates(l1233));
   }
 
-  @Test
   @SuppressWarnings("ArrayEquals") // demonstrates the effect of regular equals
   public void testDeepEquals() {
 
@@ -385,7 +373,6 @@ public final class CollectionsPlumeTest {
     assertTrue(!CollectionsPlume.deepEquals(l2, l3));
   }
 
-  @Test
   @SuppressWarnings("lock:methodref.receiver")
   public void testMapList() {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
@@ -393,7 +380,6 @@ public final class CollectionsPlumeTest {
     assertEquals(out, CollectionsPlume.mapList(Object::toString, in));
   }
 
-  @Test
   @SuppressWarnings("lock:methodref.receiver")
   public void testTransform() {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
@@ -402,7 +388,6 @@ public final class CollectionsPlumeTest {
   }
 
   /** Tests UtilPlume createCombinations routines. */
-  @Test
   public void test_createCombinations() {
 
     // public static List createCombinations (int dims, int start, List objs)
@@ -468,7 +453,6 @@ public final class CollectionsPlumeTest {
     assertTrue(combo5.contains(Arrays.asList(new Integer[] {i12, i12})));
   }
 
-  @Test
   public void testGetFromSet() {
     Integer i2 = 2;
     Integer i10 = 10;
@@ -477,7 +461,6 @@ public final class CollectionsPlumeTest {
     assertEquals(null, CollectionsPlume.getFromSet(iota5, i10));
   }
 
-  @Test
   public void testAdjoin() {
     Integer i2 = 2;
     Integer i5 = 5;
@@ -490,7 +473,6 @@ public final class CollectionsPlumeTest {
     assertEquals(iota6, myList);
   }
 
-  @Test
   public void testAdjoinAll() {
     List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
     List<Integer> countdown = Arrays.asList(8, 7, 6, 5, 4, 3);
@@ -500,7 +482,6 @@ public final class CollectionsPlumeTest {
     assertEquals(result, myList);
   }
 
-  @Test
   public void testListUnion() {
     List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
     List<Integer> countdown = Arrays.asList(8, 7, 6, 5, 4, 3);
@@ -509,7 +490,6 @@ public final class CollectionsPlumeTest {
     assertEquals(result, myList);
   }
 
-  @Test
   public void testListIntersection() {
     List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
     List<Integer> countdown = Arrays.asList(8, 7, 6, 5, 4, 3);

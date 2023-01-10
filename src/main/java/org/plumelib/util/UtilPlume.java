@@ -68,8 +68,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "CollectionsPlume.intersectionCardinalityAtLeast(a, b, i)",
   //     imports = "org.plumelib.util.CollectionsPlume")
-  @Pure
-  public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, @NonNegative int i) {
+  public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, int i) {
     return CollectionsPlume.intersectionCardinalityAtLeast(a, b, i);
   }
 
@@ -88,9 +87,8 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "CollectionsPlume.intersectionCardinalityAtLeast(a, b, c, i)",
   //     imports = "org.plumelib.util.CollectionsPlume")
-  @Pure
   public static boolean intersectionCardinalityAtLeast(
-      BitSet a, BitSet b, BitSet c, @NonNegative int i) {
+      BitSet a, BitSet b, BitSet c, int i) {
     return CollectionsPlume.intersectionCardinalityAtLeast(a, b, c, i);
   }
 
@@ -106,7 +104,6 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "CollectionsPlume.intersectionCardinality(a, b)",
   //     imports = "org.plumelib.util.CollectionsPlume")
-  @Pure
   public static int intersectionCardinality(BitSet a, BitSet b) {
     return CollectionsPlume.intersectionCardinality(a, b);
   }
@@ -125,7 +122,6 @@ public final class UtilPlume {
   //     replacement = "CollectionsPlume.intersectionCardinality(a, b, c)",
   //     imports = "org.plumelib.util.CollectionsPlume")
   @SuppressWarnings({"lock"}) // side effect to local state (BitSet)
-  @Pure
   public static int intersectionCardinality(BitSet a, BitSet b, BitSet c) {
     return CollectionsPlume.intersectionCardinality(a, b, c);
   }
@@ -242,7 +238,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "FilesPlume.newFileReader(path, charsetName)",
   //     imports = "org.plumelib.util.FilesPlume")
-  public static InputStreamReader fileReader(Path path, @Nullable String charsetName)
+  public static InputStreamReader fileReader(Path path, String charsetName)
       throws FileNotFoundException, IOException {
     return FilesPlume.newFileReader(path, charsetName);
   }
@@ -288,7 +284,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "FilesPlume.newFileReader(file, charsetName)",
   //     imports = "org.plumelib.util.FilesPlume")
-  public static InputStreamReader fileReader(File file, @Nullable String charsetName)
+  public static InputStreamReader fileReader(File file, String charsetName)
       throws FileNotFoundException, IOException {
     return FilesPlume.newFileReader(file, charsetName);
   }
@@ -358,7 +354,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "FilesPlume.newBufferedFileReader(filename)",
   //     imports = "org.plumelib.util.FilesPlume")
-  public static BufferedReader bufferedFileReader(String filename, @Nullable String charsetName)
+  public static BufferedReader bufferedFileReader(String filename, String charsetName)
       throws FileNotFoundException, IOException {
     return FilesPlume.newBufferedFileReader(filename);
   }
@@ -382,7 +378,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "FilesPlume.newBufferedFileReader(file, charsetName)",
   //     imports = "org.plumelib.util.FilesPlume")
-  public static BufferedReader bufferedFileReader(File file, @Nullable String charsetName)
+  public static BufferedReader bufferedFileReader(File file, String charsetName)
       throws FileNotFoundException, IOException {
     return FilesPlume.newBufferedFileReader(file, charsetName);
   }
@@ -583,7 +579,6 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "FilesPlume.equalFiles(file1, file2, false)",
   //     imports = "org.plumelib.util.FilesPlume")
-  @Pure
   public static boolean equalFiles(String file1, String file2) {
     return FilesPlume.equalFiles(file1, file2, false);
   }
@@ -602,7 +597,6 @@ public final class UtilPlume {
   //     replacement = "FilesPlume.equalFiles(file1, file2, trimLines)",
   //     imports = "org.plumelib.util.FilesPlume")
   @SuppressWarnings({"lock"}) // reads files, side effects local state
-  @Pure
   public static boolean equalFiles(String file1, String file2, boolean trimLines) {
     return FilesPlume.equalFiles(file1, file2, trimLines);
   }
@@ -878,7 +872,7 @@ public final class UtilPlume {
    * @param b value to be hashed
    * @return a hash of the arguments
    */
-  public static int hash(double @Nullable [] a, double @Nullable [] b) {
+  public static int hash(double[] a, double[] b) {
     return Objects.hash(Arrays.hashCode(a), Arrays.hashCode(b));
   }
 
@@ -889,7 +883,7 @@ public final class UtilPlume {
    * @param b value to be hashed
    * @return a hash of the arguments
    */
-  public static int hash(long @Nullable [] a, long @Nullable [] b) {
+  public static int hash(long[] a, long[] b) {
     return Objects.hash(Arrays.hashCode(a), Arrays.hashCode(b));
   }
 
@@ -958,7 +952,7 @@ public final class UtilPlume {
    */
   @Deprecated // 2021-01-05
   // @InlineMe(replacement = "Arrays.hashCode(a)", imports = "java.util.Arrays")
-  public static int hash(double @Nullable [] a) {
+  public static int hash(double[] a) {
     return Arrays.hashCode(a);
   }
 
@@ -1017,7 +1011,7 @@ public final class UtilPlume {
    */
   @Deprecated // 2021-01-05
   // @InlineMe(replacement = "Arrays.hashCode(a)", imports = "java.util.Arrays")
-  public static int hash(long @Nullable [] a) {
+  public static int hash(long[] a) {
     return Arrays.hashCode(a);
   }
 
@@ -1030,7 +1024,7 @@ public final class UtilPlume {
    */
   @Deprecated // use Objects.hashCode; deprecated 2021-01-05
   // @InlineMe(replacement = "Objects.hashCode(a)", imports = "java.util.Objects")
-  public static int hash(@Nullable String a) {
+  public static int hash(String a) {
     return Objects.hashCode(a);
   }
 
@@ -1044,7 +1038,7 @@ public final class UtilPlume {
    */
   @Deprecated // 2021-01-05
   // @InlineMe(replacement = "Objects.hash(a, b)", imports = "java.util.Objects")
-  public static int hash(@Nullable String a, @Nullable String b) {
+  public static int hash(String a, String b) {
     return Objects.hash(a, b);
   }
 
@@ -1059,7 +1053,7 @@ public final class UtilPlume {
    */
   @Deprecated // 2021-01-05
   // @InlineMe(replacement = "Objects.hash(a, b, c)", imports = "java.util.Objects")
-  public static int hash(@Nullable String a, @Nullable String b, @Nullable String c) {
+  public static int hash(String a, String b, String c) {
     return Objects.hash(a, b, c);
   }
 
@@ -1072,7 +1066,7 @@ public final class UtilPlume {
    */
   @Deprecated // 2021-01-05
   // @InlineMe(replacement = "Arrays.hashCode(a)", imports = "java.util.Arrays")
-  public static int hash(@Nullable String @Nullable [] a) {
+  public static int hash(String[] a) {
     return Arrays.hashCode(a);
   }
 
@@ -1092,7 +1086,7 @@ public final class UtilPlume {
   //     replacement = "StringsPlume.mapToStringAndClass(m)",
   //     imports = "org.plumelib.util.StringsPlume")
   public static String mapToStringAndClass(
-      Map<? extends @Signed @PolyNull Object, ? extends @Signed @PolyNull Object> m) {
+      Map<? extends Object, ? extends Object> m) {
     return StringsPlume.mapToStringAndClass(m);
   }
 
@@ -1107,7 +1101,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "StringsPlume.toStringAndClass(o)",
   //     imports = "org.plumelib.util.StringsPlume")
-  public static String toStringAndClass(@Nullable Object o) {
+  public static String toStringAndClass(Object o) {
     return StringsPlume.toStringAndClass(o);
   }
 
@@ -1158,7 +1152,6 @@ public final class UtilPlume {
    * @return true iff the property has value "true", "yes", or "1"
    * @deprecated use {@link getBooleanProperty}
    */
-  @Pure
   @Deprecated // 2021-03-28
   // @InlineMe(
   //     replacement = "UtilPlume.getBooleanProperty(p, key)",
@@ -1179,7 +1172,6 @@ public final class UtilPlume {
    * @return true iff the property has value "true", "yes", or "1"
    */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // does not depend on object identity
-  @Pure
   public static boolean getBooleanProperty(Properties p, String key, boolean defaultValue) {
     String pvalue = p.getProperty(key);
     if (pvalue == null) {
@@ -1211,7 +1203,6 @@ public final class UtilPlume {
    * @param key name of the property to look up
    * @return true iff the property has value "true", "yes", or "1"
    */
-  @Pure
   public static boolean getBooleanProperty(Properties p, String key) {
     return getBooleanProperty(p, key, false);
   }
@@ -1227,7 +1218,7 @@ public final class UtilPlume {
    * @see Properties#getProperty
    * @see Properties#setProperty
    */
-  public static @Nullable String appendProperty(Properties p, String key, String value) {
+  public static String appendProperty(Properties p, String key, String value) {
     return (String) p.setProperty(key, p.getProperty(key, "") + value);
   }
 
@@ -1241,7 +1232,7 @@ public final class UtilPlume {
    * @param value value to set the property to, if it is not already set
    * @return the previous value of the property
    */
-  public static @Nullable String setDefaultMaybe(Properties p, String key, String value) {
+  public static String setDefaultMaybe(Properties p, String key, String value) {
     String currentValue = p.getProperty(key);
     if (currentValue == null) {
       p.setProperty(key, value);
@@ -1373,7 +1364,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "StringsPlume.prefixLines(prefix, o)",
   //     imports = "org.plumelib.util.StringsPlume")
-  public static String prefixLines(String prefix, @Nullable Object o) {
+  public static String prefixLines(String prefix, Object o) {
     return StringsPlume.prefixLines(prefix, o);
   }
 
@@ -1391,7 +1382,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "StringsPlume.prefixLinesExceptFirst(prefix, o)",
   //     imports = "org.plumelib.util.StringsPlume")
-  public static String prefixLinesExceptFirst(String prefix, @Nullable Object o) {
+  public static String prefixLinesExceptFirst(String prefix, Object o) {
     return StringsPlume.prefixLinesExceptFirst(prefix, o);
   }
 
@@ -1409,7 +1400,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "StringsPlume.indentLines(indent, o)",
   //     imports = "org.plumelib.util.StringsPlume")
-  public static String indentLines(@NonNegative int indent, @Nullable Object o) {
+  public static String indentLines(int indent, Object o) {
     return StringsPlume.indentLines(indent, o);
   }
 
@@ -1427,7 +1418,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "StringsPlume.indentLinesExceptFirst(indent, o)",
   //     imports = "org.plumelib.util.StringsPlume")
-  public static String indentLinesExceptFirst(@NonNegative int indent, @Nullable Object o) {
+  public static String indentLinesExceptFirst(int indent, Object o) {
     return StringsPlume.indentLinesExceptFirst(indent, o);
   }
 
@@ -1487,8 +1478,6 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume#splitLines}
    */
   @SuppressWarnings("value:statically.executable.not.pure") // pure wrt `equals()` but not `==`
-  @SideEffectFree
-  @StaticallyExecutable
   @Deprecated // 2020-12-02
   // @InlineMe(replacement="StringsPlume.splitLines(s)", imports="org.plumelib.util.StringsPlume")
   public static String[] splitLines(String s) {
@@ -1514,7 +1503,7 @@ public final class UtilPlume {
   @Deprecated // 2020-02-20
   // @InlineMe(replacement="StringsPlume.join(delim, a)", imports="org.plumelib.util.StringsPlume")
   @SuppressWarnings("nullness:type.argument")
-  public static <T> String join(@Signed T[] a, CharSequence delim) {
+  public static <T> String join(T[] a, CharSequence delim) {
     return StringsPlume.join(delim, a);
   }
 
@@ -1537,7 +1526,7 @@ public final class UtilPlume {
   // @InlineMe(replacement="StringsPlume.join(delim, a)", imports="org.plumelib.util.StringsPlume")
   @SafeVarargs
   @SuppressWarnings({"varargs", "nullness:type.argument"})
-  public static <T> String join(CharSequence delim, @Signed T... a) {
+  public static <T> String join(CharSequence delim, T... a) {
     return StringsPlume.join(delim, a);
   }
 
@@ -1554,7 +1543,7 @@ public final class UtilPlume {
   @SuppressWarnings({"varargs", "nullness:type.argument"})
   @Deprecated // 2020-12-02
   // @InlineMe(replacement="StringsPlume.joinLines(a)", imports="org.plumelib.util.StringsPlume")
-  public static <T> String joinLines(@Signed T... a) {
+  public static <T> String joinLines(T... a) {
     return StringsPlume.joinLines(a);
   }
 
@@ -1574,7 +1563,7 @@ public final class UtilPlume {
    */
   @Deprecated // 2020-12-02
   // @InlineMe(replacement="StringsPlume.join(delim, v)", imports="org.plumelib.util.StringsPlume")
-  public static String join(Iterable<? extends @Signed @PolyNull Object> v, CharSequence delim) {
+  public static String join(Iterable<? extends Object> v, CharSequence delim) {
     return StringsPlume.join(delim, v);
   }
 
@@ -1593,7 +1582,7 @@ public final class UtilPlume {
    */
   @Deprecated // deprecated 2020-12-02
   // @InlineMe(replacement="StringsPlume.join(delim, v)", imports="org.plumelib.util.StringsPlume")
-  public static String join(CharSequence delim, Iterable<? extends @Signed @PolyNull Object> v) {
+  public static String join(CharSequence delim, Iterable<? extends Object> v) {
     return StringsPlume.join(delim, v);
   }
 
@@ -1608,7 +1597,7 @@ public final class UtilPlume {
    */
   @Deprecated // 2020-12-02
   // @InlineMe(replacement="StringsPlume.joinLines(v)", imports="org.plumelib.util.StringsPlume")
-  public static String joinLines(Iterable<? extends @Signed @PolyNull Object> v) {
+  public static String joinLines(Iterable<? extends Object> v) {
     return StringsPlume.joinLines(v);
   }
 
@@ -1816,7 +1805,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "StringsPlume.lpad(s, length)",
   //     imports = "org.plumelib.util.StringsPlume")
-  public static String lpad(String s, @NonNegative int length) {
+  public static String lpad(String s, int length) {
     return StringsPlume.lpad(s, length);
   }
 
@@ -1833,7 +1822,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "StringsPlume.rpad(s, length)",
   //     imports = "org.plumelib.util.StringsPlume")
-  public static String rpad(String s, @NonNegative int length) {
+  public static String rpad(String s, int length) {
     return StringsPlume.rpad(s, length);
   }
 
@@ -1849,7 +1838,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "StringsPlume.rpad(num, length)",
   //     imports = "org.plumelib.util.StringsPlume")
-  public static String rpad(int num, @NonNegative int length) {
+  public static String rpad(int num, int length) {
     return StringsPlume.rpad(num, length);
   }
 
@@ -1865,7 +1854,7 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "StringsPlume.rpad(num, length)",
   //     imports = "org.plumelib.util.StringsPlume")
-  public static String rpad(double num, @NonNegative int length) {
+  public static String rpad(double num, int length) {
     return StringsPlume.rpad(num, length);
   }
 
@@ -1876,16 +1865,15 @@ public final class UtilPlume {
    */
   @Deprecated // 2020-12-02
   public static class NullableStringComparator
-      implements Comparator<@Nullable String>, Serializable {
+      implements Comparator<String>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /** Create a new NullableStringComparator. */
     public NullableStringComparator() {}
 
-    @Pure
     @Override
-    public int compare(@Nullable String s1, @Nullable String s2) {
+    public int compare(String s1, String s2) {
       if (s1 == null) {
         if (s2 == null) {
           return 0;
@@ -1913,7 +1901,7 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume.ObjectComparator}
    */
   @Deprecated // 2020-12-02
-  public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
+  public static class ObjectComparator implements Comparator<Object>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20170420L;
 
@@ -1924,9 +1912,8 @@ public final class UtilPlume {
       "allcheckers:purity.not.deterministic.call",
       "lock"
     }) // toString is being used in a deterministic way
-    @Pure
     @Override
-    public int compare(@Nullable Object o1, @Nullable Object o2) {
+    public int compare(Object o1, Object o2) {
       // Make null compare smaller than anything else
       if ((o1 == o2)) {
         return 0;

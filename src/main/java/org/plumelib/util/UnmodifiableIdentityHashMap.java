@@ -62,83 +62,83 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
   }
 
   @Override
-  public @NonNegative int size(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
+  public int size(UnmodifiableIdentityHashMap<K, V> this) {
     return map.size();
   }
 
   @Override
-  public boolean isEmpty(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
+  public boolean isEmpty(UnmodifiableIdentityHashMap<K, V> this) {
     return map.isEmpty();
   }
 
   @Override
-  public @Nullable V get(
-      @GuardSatisfied UnmodifiableIdentityHashMap<K, V> this,
-      @GuardSatisfied @Nullable @UnknownSignedness Object key) {
+  public V get(
+      UnmodifiableIdentityHashMap<K, V> this,
+      Object key) {
     return map.get(key);
   }
 
   @Override
   public boolean containsKey(
-      @GuardSatisfied UnmodifiableIdentityHashMap<K, V> this,
-      @GuardSatisfied @Nullable @UnknownSignedness Object key) {
+      UnmodifiableIdentityHashMap<K, V> this,
+      Object key) {
     return map.containsKey(key);
   }
 
   @Override
   public boolean containsValue(
-      @GuardSatisfied UnmodifiableIdentityHashMap<K, V> this,
-      @GuardSatisfied @Nullable @UnknownSignedness Object value) {
+      UnmodifiableIdentityHashMap<K, V> this,
+      Object value) {
     return map.containsValue(value);
   }
 
   @Override
-  public @Nullable V put(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this, K key, V value) {
+  public V put(UnmodifiableIdentityHashMap<K, V> this, K key, V value) {
     throw new UnsupportedOperationException();
   }
 
   @Override
   public void putAll(
-      @GuardSatisfied UnmodifiableIdentityHashMap<K, V> this, Map<? extends K, ? extends V> m) {
+      UnmodifiableIdentityHashMap<K, V> this, Map<? extends K, ? extends V> m) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public @Nullable V remove(
-      @GuardSatisfied UnmodifiableIdentityHashMap<K, V> this,
-      @GuardSatisfied @Nullable @UnknownSignedness Object key) {
+  public V remove(
+      UnmodifiableIdentityHashMap<K, V> this,
+      Object key) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void clear(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
+  public void clear(UnmodifiableIdentityHashMap<K, V> this) {
     throw new UnsupportedOperationException();
   }
 
   @Override
   @SuppressWarnings("IdentityHashMapUsage")
   public boolean equals(
-      @GuardSatisfied UnmodifiableIdentityHashMap<K, V> this, @Nullable @GuardSatisfied Object o) {
+      UnmodifiableIdentityHashMap<K, V> this, Object o) {
     return map.equals(o);
   }
 
   @Override
-  public int hashCode(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
+  public int hashCode(UnmodifiableIdentityHashMap<K, V> this) {
     return map.hashCode();
   }
 
   @Override
-  public Set<K> keySet(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
+  public Set<K> keySet(UnmodifiableIdentityHashMap<K, V> this) {
     return Collections.unmodifiableSet(map.keySet());
   }
 
   @Override
-  public Collection<V> values(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
+  public Collection<V> values(UnmodifiableIdentityHashMap<K, V> this) {
     return Collections.unmodifiableCollection(map.values());
   }
 
   @Override
-  public Set<Map.Entry<K, V>> entrySet(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
+  public Set<Map.Entry<K, V>> entrySet(UnmodifiableIdentityHashMap<K, V> this) {
     return Collections.unmodifiableSet(map.entrySet());
   }
 
@@ -154,12 +154,12 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
   }
 
   @Override
-  public String toString(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
+  public String toString(UnmodifiableIdentityHashMap<K, V> this) {
     return map.toString();
   }
 
   @Override
-  public V getOrDefault(@GuardSatisfied @UnknownSignedness Object key, V defaultValue) {
+  public V getOrDefault(Object key, V defaultValue) {
     return map.getOrDefault(key, defaultValue);
   }
 
@@ -170,8 +170,8 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
 
   @Override
   public boolean remove(
-      @GuardSatisfied @UnknownSignedness Object key,
-      @GuardSatisfied @UnknownSignedness Object value) {
+      Object key,
+      Object value) {
     throw new UnsupportedOperationException();
   }
 
@@ -186,26 +186,26 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
   }
 
   @Override
-  public @PolyNull V computeIfAbsent(
-      K key, Function<? super K, ? extends @PolyNull V> mappingFunction) {
+  public V computeIfAbsent(
+      K key, Function<? super K, ? extends V> mappingFunction) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public @PolyNull V computeIfPresent(
-      K key, BiFunction<? super K, ? super V, ? extends @PolyNull V> remappingFunction) {
+  public V computeIfPresent(
+      K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public @PolyNull V compute(
-      K key, BiFunction<? super K, ? super V, ? extends @PolyNull V> remappingFunction) {
+  public V compute(
+      K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public @PolyNull V merge(
-      K key, V value, BiFunction<? super V, ? super V, ? extends @PolyNull V> remappingFunction) {
+  public V merge(
+      K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
     throw new UnsupportedOperationException();
   }
 }

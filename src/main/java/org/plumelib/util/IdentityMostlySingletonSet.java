@@ -34,7 +34,7 @@ public final class IdentityMostlySingletonSet<T extends Object>
 
   @SuppressWarnings("fallthrough")
   @Override
-  public boolean add(@GuardSatisfied IdentityMostlySingletonSet<T> this, @FindDistinct T e) {
+  public boolean add(IdentityMostlySingletonSet<T> this, T e) {
     switch (state) {
       case EMPTY:
         state = State.SINGLETON;
@@ -55,7 +55,7 @@ public final class IdentityMostlySingletonSet<T extends Object>
   }
 
   /** Switch the representation of this from SINGLETON to ANY. */
-  private void makeNonSingleton(@GuardSatisfied IdentityMostlySingletonSet<T> this) {
+  private void makeNonSingleton(IdentityMostlySingletonSet<T> this) {
     state = State.ANY;
     set = Collections.newSetFromMap(new IdentityHashMap<>(4));
     assert value != null : "@AssumeAssertion(nullness): previous add is non-null";
@@ -66,8 +66,8 @@ public final class IdentityMostlySingletonSet<T extends Object>
   @SuppressWarnings("interning:not.interned") // this class uses object identity
   @Override
   public boolean contains(
-      @GuardSatisfied IdentityMostlySingletonSet<T> this,
-      @GuardSatisfied @UnknownSignedness Object o) {
+      IdentityMostlySingletonSet<T> this,
+      Object o) {
     switch (state) {
       case EMPTY:
         return false;

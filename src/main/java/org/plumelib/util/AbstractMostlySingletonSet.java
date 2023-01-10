@@ -39,9 +39,9 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
   /** The current state. */
   protected State state;
   /** The current value, non-null when the state is SINGLETON. */
-  protected @Nullable T value;
+  protected T value;
   /** The wrapped set, non-null when the state is ANY. */
-  protected @Nullable Set<T> set;
+  protected Set<T> set;
 
   /**
    * Create an AbstractMostlySingletonSet.
@@ -75,7 +75,7 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
   }
 
   @Override
-  public @NonNegative int size(@GuardSatisfied AbstractMostlySingletonSet<T> this) {
+  public int size(AbstractMostlySingletonSet<T> this) {
     switch (state) {
       case EMPTY:
         return 0;
@@ -90,7 +90,7 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
   }
 
   @Override
-  public boolean isEmpty(@GuardSatisfied AbstractMostlySingletonSet<T> this) {
+  public boolean isEmpty(AbstractMostlySingletonSet<T> this) {
     return size() == 0;
   }
 
@@ -99,7 +99,6 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
     "allcheckers:purity.not.sideeffectfree",
     "lock:override.receiver" // cannot specify the anonymous receiver type
   })
-  @SideEffectFree
   public Iterator<T> iterator() {
     switch (state) {
       case EMPTY:
@@ -139,7 +138,7 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
   }
 
   @Override
-  public String toString(@GuardSatisfied AbstractMostlySingletonSet<T> this) {
+  public String toString(AbstractMostlySingletonSet<T> this) {
     switch (state) {
       case EMPTY:
         return "[]";
@@ -155,7 +154,7 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
 
   @Override
   public boolean addAll(
-      @GuardSatisfied AbstractMostlySingletonSet<T> this, Collection<? extends T> c) {
+      AbstractMostlySingletonSet<T> this, Collection<? extends T> c) {
     boolean res = false;
     for (T elem : c) {
       res |= add(elem);
@@ -164,39 +163,39 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
   }
 
   @Override
-  public @PolySigned Object[] toArray() {
+  public Object[] toArray() {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public <S> @Nullable S[] toArray(@PolyNull S[] a) {
+  public <S> S[] toArray(S[] a) {
     throw new UnsupportedOperationException();
   }
 
   @Override
   public boolean remove(
-      @GuardSatisfied AbstractMostlySingletonSet<T> this, @Nullable @UnknownSignedness Object o) {
+      AbstractMostlySingletonSet<T> this, Object o) {
     throw new UnsupportedOperationException();
   }
 
   @Override
   public boolean containsAll(
-      @GuardSatisfied AbstractMostlySingletonSet<T> this, @GuardSatisfied Collection<?> c) {
+      AbstractMostlySingletonSet<T> this, Collection<?> c) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean retainAll(@GuardSatisfied AbstractMostlySingletonSet<T> this, Collection<?> c) {
+  public boolean retainAll(AbstractMostlySingletonSet<T> this, Collection<?> c) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean removeAll(@GuardSatisfied AbstractMostlySingletonSet<T> this, Collection<?> c) {
+  public boolean removeAll(AbstractMostlySingletonSet<T> this, Collection<?> c) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void clear(@GuardSatisfied AbstractMostlySingletonSet<T> this) {
+  public void clear(AbstractMostlySingletonSet<T> this) {
     throw new UnsupportedOperationException();
   }
 }

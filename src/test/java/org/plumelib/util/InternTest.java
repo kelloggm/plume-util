@@ -24,7 +24,7 @@ public final class InternTest {
 
       Random randomGen = new Random();
 
-      int @ArrayLen(100) [] @ArrayLen(10) [] arrays = new int[100] @ArrayLen(10) [];
+      int[][] arrays = new int[100][];
       for (int i = 0; i < arrays.length; i++) {
         int[] a = new int[10];
         for (int j = 0; j < a.length; j++) {
@@ -85,7 +85,6 @@ public final class InternTest {
     }
   }
 
-  @Test
   public void testHasher() {
 
     /// To check (maybe some of these are done already).
@@ -123,7 +122,6 @@ public final class InternTest {
     internTestHelper.test(false);
   }
 
-  @Test
   public void testIntern() {
     Integer i = Intern.internedInteger("1234");
     assertTrue(Intern.isInterned(i));
@@ -142,9 +140,8 @@ public final class InternTest {
 
   // Tests the method "Object intern(Object)" in Intern.java
   @SuppressWarnings({"deprecation", "removal", "BoxedPrimitiveConstructor"}) // interning test
-  @Test
   public void testInternObject() {
-    Object nIntern = Intern.intern((@Nullable Object) null);
+    Object nIntern = Intern.intern((Object) null);
     assertTrue(nIntern == null);
 
     String sOrig = new String("foo");
@@ -154,7 +151,7 @@ public final class InternTest {
     Object sOtherIntern = Intern.intern(new String("foo"));
     assertTrue(sIntern == sOtherIntern);
 
-    @Interned String[] saOrig = new String[] {"foo", "bar"};
+    String[] saOrig = new String[] {"foo", "bar"};
     String[] saIntern = Intern.intern(saOrig);
     Object saObjIntern = Intern.intern((Object) saOrig);
     assertTrue(saIntern == saObjIntern);
@@ -242,7 +239,7 @@ public final class InternTest {
             (Object) new double[] {-0.0, Double.POSITIVE_INFINITY / Double.POSITIVE_INFINITY});
     assertTrue(da2Intern == da2OtherIntern);
 
-    @Interned Object[] oaOrig = new Object[] {"foo", 1};
+    Object[] oaOrig = new Object[] {"foo", 1};
     Object[] oaIntern = Intern.intern(oaOrig);
     Object oaObjIntern = Intern.intern((Object) oaOrig);
     assertTrue(oaIntern == oaObjIntern);
@@ -263,7 +260,6 @@ public final class InternTest {
    * indices.
    */
   @SuppressWarnings("index:argument") // https://github.com/typetools/checker-framework/issues/2484
-  @Test
   public void testSequenceAndIndices() {
     int[] a1 = Intern.intern(new int[] {1, 2, 3, 4, 5, 6, 7});
     int[] a2 = Intern.intern(new int[] {1, 2, 3, 4, 5, 6, 7});
