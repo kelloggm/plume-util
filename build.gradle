@@ -69,7 +69,7 @@ dependencies {
 }
 tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
-  options.compilerArgs << '-Xlint:all,-processing' << '-Werror'
+  options.compilerArgs << '-Xlint:all,-processing'// << '-Werror'
   options.errorprone {
     enabled = JavaVersion.current() != JavaVersion.VERSION_1_8
     // Recommends @InlineMe, which isn't in the error_prone_annotations jar file.  An `implementation`
@@ -103,7 +103,10 @@ checkerFramework {
     // 'org.checkerframework.common.initializedfields.InitializedFieldsChecker',
   ]
   extraJavacArgs = [
-    '-Werror',
+    //'-Werror',
+    '-Ainfer=ajava',
+    '-Awarns',
+    '-Aajava=/tmp/WPITEMP-util'
     '-AcheckPurityAnnotations',
     '-ArequirePrefixInWarningSuppressions',
     '-AwarnUnneededSuppressions',
