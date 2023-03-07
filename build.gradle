@@ -106,7 +106,7 @@ checkerFramework {
     //'-Werror',
     '-Ainfer=ajava',
     '-Awarns',
-    '-Aajava=/tmp/WPITEMP-util'
+    '-Aajava=/tmp/WPITEMP-util',
     '-AcheckPurityAnnotations',
     '-ArequirePrefixInWarningSuppressions',
     '-AwarnUnneededSuppressions',
