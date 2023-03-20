@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.regex.qual.Regex;
@@ -223,7 +222,7 @@ public final class StringsPlume {
   })
   @SafeVarargs
   @SideEffectFree
-  public static <T extends @MustCallUnknown Object> String join(
+  public static <T extends Object> String join(
       CharSequence delim, @Signed T... a) {
     if (a.length == 0) {
       return "";
@@ -249,7 +248,7 @@ public final class StringsPlume {
   @SafeVarargs
   @SuppressWarnings("varargs")
   @SideEffectFree
-  public static <T extends @MustCallUnknown Object> String joinLines(@Signed T... a) {
+  public static <T extends Object> String joinLines(@Signed T... a) {
     return join(lineSep, a);
   }
 
@@ -272,10 +271,10 @@ public final class StringsPlume {
   @SideEffectFree
   public static String join(
       CharSequence delim,
-      @MustCallUnknown Iterable<? extends @Signed @PolyNull @MustCallUnknown Object> v) {
+      Iterable<? extends @Signed @PolyNull Object> v) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
-    Iterator<? extends @Signed @PolyNull @MustCallUnknown Object> itor = v.iterator();
+    Iterator<? extends @Signed @PolyNull Object> itor = v.iterator();
     while (itor.hasNext()) {
       if (first) {
         first = false;
@@ -297,7 +296,7 @@ public final class StringsPlume {
    */
   @SideEffectFree
   public static String joinLines(
-      @MustCallUnknown Iterable<? extends @Signed @PolyNull @MustCallUnknown Object> v) {
+      Iterable<? extends @Signed @PolyNull Object> v) {
     return join(lineSep, v);
   }
 

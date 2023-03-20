@@ -27,7 +27,6 @@ import java.util.function.Function;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
-import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -60,7 +59,7 @@ public final class CollectionsPlume {
    * @param l a list to sort
    * @param c a sorted version of the list
    */
-  public static <T> List<T> sortList(List<T> l, Comparator<@MustCallUnknown ? super T> c) {
+  public static <T> List<T> sortList(List<T> l, Comparator<? super T> c) {
     List<T> result = new ArrayList<>(l);
     Collections.sort(result, c);
     return result;
@@ -382,10 +381,10 @@ public final class CollectionsPlume {
    * @return a list of the results of applying {@code f} to the elements of {@code iterable}
    */
   public static <
-          @KeyForBottom FROM extends @Nullable @UnknownKeyFor @MustCallUnknown Object,
-          @KeyForBottom TO extends @Nullable @UnknownKeyFor @MustCallUnknown Object>
+          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
+          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
       List<TO> mapList(
-          @MustCallUnknown Function<@MustCallUnknown ? super FROM, ? extends TO> f,
+          Function<? super FROM, ? extends TO> f,
           Iterable<FROM> iterable) {
     List<TO> result;
 
@@ -431,7 +430,7 @@ public final class CollectionsPlume {
           @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
           @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
       List<TO> mapList(
-          @MustCallUnknown Function<@MustCallUnknown ? super FROM, ? extends TO> f, FROM[] a) {
+          Function<? super FROM, ? extends TO> f, FROM[] a) {
     int size = a.length;
     List<TO> result = new ArrayList<>(size);
     for (int i = 0; i < size; i++) {
@@ -462,7 +461,7 @@ public final class CollectionsPlume {
           @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
           @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
       List<TO> transform(
-          Iterable<FROM> iterable, Function<@MustCallUnknown ? super FROM, ? extends TO> f) {
+          Iterable<FROM> iterable, Function<? super FROM, ? extends TO> f) {
     return mapList(f, iterable);
   }
 
@@ -1279,7 +1278,7 @@ public final class CollectionsPlume {
    * @param m a map whose keyset will be sorted
    * @return a sorted version of m.keySet()
    */
-  public static <K extends Comparable<@MustCallUnknown ? super K>, V>
+  public static <K extends Comparable<? super K>, V>
       Collection<@KeyFor("#1") K> sortedKeySet(Map<K, V> m) {
     ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<>(m.keySet());
     Collections.sort(theKeys);

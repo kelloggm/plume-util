@@ -35,7 +35,6 @@ public class ToStringComparator implements Comparator<Object> {
    */
   @SuppressWarnings({
     "nullness:argument", // Comparator should be @Contravariant.
-    "mustcall:argument" // not sure; Java generics inference?
   })
   public static <T> List<T> sorted(Iterable<T> in) {
     List<T> result = new ArrayList<T>();

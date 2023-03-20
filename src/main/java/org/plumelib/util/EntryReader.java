@@ -22,7 +22,6 @@ import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
-import org.checkerframework.checker.mustcall.qual.MustCallAlias;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -71,8 +70,7 @@ import org.checkerframework.checker.regex.qual.Regex;
  * @see #getEntry() and @see #setEntryStartStop(String,String)
  */
 @SuppressWarnings({
-  "IterableAndIterator",
-  "builder:required.method.not.called" // Collection `readers` has element type @MustCall("close")
+  "IterableAndIterator"
 })
 public class EntryReader extends LineNumberReader implements Iterable<String>, Iterator<String> {
 
@@ -226,8 +224,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws UnsupportedEncodingException if the charset encoding is not supported
    * @see #EntryReader(InputStream,String,String,String)
    */
-  public @MustCallAlias EntryReader(
-      @MustCallAlias InputStream in,
+  public EntryReader(
+      InputStream in,
       String charsetName,
       String filename,
       @Nullable @Regex String commentRegexString,
@@ -245,8 +243,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws UnsupportedEncodingException if the charset encoding is not supported
    * @see #EntryReader(InputStream,String,String,String)
    */
-  public @MustCallAlias EntryReader(
-      @MustCallAlias InputStream in, String charsetName, String filename)
+  public EntryReader(
+      InputStream in, String charsetName, String filename)
       throws UnsupportedEncodingException {
     this(in, charsetName, filename, null, null);
   }
@@ -263,8 +261,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
    */
-  public @MustCallAlias EntryReader(
-      @MustCallAlias InputStream in,
+  public EntryReader(
+      InputStream in,
       String filename,
       @Nullable @Regex String commentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
@@ -279,7 +277,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param filename the file name
    * @see #EntryReader(InputStream,String,String,String,String)
    */
-  public @MustCallAlias EntryReader(@MustCallAlias InputStream in, String filename) {
+  public EntryReader(InputStream in, String filename) {
     this(in, filename, null, null);
   }
 
@@ -289,7 +287,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param in the InputStream
    * @see #EntryReader(InputStream,String,String,String)
    */
-  public @MustCallAlias EntryReader(@MustCallAlias InputStream in) {
+  public EntryReader(InputStream in) {
     this(in, "(InputStream)", null, null);
   }
 
@@ -370,9 +368,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name
    */
-  @SuppressWarnings("builder") // storing into a collection
-  public @MustCallAlias EntryReader(
-      @MustCallAlias Reader reader,
+  public EntryReader(
+      Reader reader,
       String filename,
       @Nullable @Regex String commentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
@@ -398,7 +395,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param reader source from which to read entries
    * @see #EntryReader(Reader,String,String,String)
    */
-  public @MustCallAlias EntryReader(@MustCallAlias Reader reader) {
+  public EntryReader(Reader reader) {
     this(reader, reader.toString(), null, null);
   }
 
@@ -611,9 +608,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @return a line-by-line iterator for this file
    */
-  @SuppressWarnings("mustcall:override.return")
   @Override
-  public @MustCallAlias Iterator<String> iterator(@MustCallAlias EntryReader this) {
+  public Iterator<String> iterator(EntryReader this) {
     return this;
   }
 
